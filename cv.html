@@ -1,20 +1,21 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CV Maker R50</title><style>body{font-family:Arial;margin:0;padding:15px;background:#f0f2f5}input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}button{background:#0d6efd;color:#fff;padding:14px;width:100%;border:none;border-radius:8px;font-weight:bold;font-size:16px;margin-top:10px}.cv{background:#fff;padding:20px;margin-top:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}.pay{background:#25D366;color:#fff;text-align:center;padding:15px;border-radius:8px;margin-top:15px;font-weight:bold}</style></head><body>
-<h2>CV Maker - eMatikwe R50</h2>
-<input id="name" placeholder="Full Name: Ntuthuko Myende">
-<input id="job" placeholder="Job you want: Welder / Driver">
-<input id="phone" placeholder="Phone: 07...">
-<textarea id="exp" placeholder="Experience: I worked at..."></textarea>
-<button onclick="make()">MAKE MY CV NOW</button>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CV Maker R50 - eMatikwe</title><style>body{font-family:Arial;padding:15px;background:#f0f2f5;margin:0}input,textarea{width:100%;padding:14px;margin:8px 0;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;font-size:16px}button{background:#0d6efd;color:#fff;padding:16px;width:100%;border:none;border-radius:10px;font-weight:bold;font-size:18px;margin-top:10px}.cv{background:#fff;padding:20px;margin-top:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.pay{background:#25D366;color:#fff;padding:18px;border-radius:10px;margin-top:15px;text-align:center;font-weight:bold;line-height:1.6}</style></head><body>
+<h2 style="text-align:center">📄 CV Maker - eMatikwe<br>R50 Only</h2>
+<p style="text-align:center">Made by Ntuthuko Factory</p>
+<input id="name" placeholder="Full Name: e.g. Ntuthuko Myende">
+<input id="job" placeholder="Job you want: e.g. Welder">
+<input id="phone" placeholder="Your Phone: e.g. 0813474435">
+<textarea id="exp" rows="4" placeholder="Experience: I worked at..."></textarea>
+<button onclick="make()">MAKE MY CV NOW 🔥</button>
 <div id="out"></div>
 <script>
 function make(){
-let n=document.getElementById('name').value;
-let j=document.getElementById('job').value;
-let p=document.getElementById('phone').value;
-let e=document.getElementById('exp').value;
-document.getElementById('out').innerHTML=`<div class=cv><h2>${n}</h2><p><b>Wanted:</b> ${j}</p><p><b>Phone:</b> ${p}</p><p><b>Experience:</b><br>${e}</p><hr><p>Created by Ntuthuko Factory</p><div class=pay>To Download PDF Pay R50 - WhatsApp: 07...<br><a style=color:#fff href=https://wa.me/27700000000?text=Hi%20I%20paid%20R50%20for%20CV%20${n}>I PAID - SEND PDF</a></div></div>`;
+let n=document.getElementById('name').value||'Your Name';
+let j=document.getElementById('job').value||'Job';
+let p=document.getElementById('phone').value||'Phone';
+let e=document.getElementById('exp').value||'Experience';
+document.getElementById('out').innerHTML=`<div class=cv><h2>${n}</h2><p><b>Looking for:</b> ${j}</p><p><b>Phone:</b> ${p}</p><p><b>Experience:</b><br>${e}</p><hr><p><b>Reference: eMatikwe Local</b></p><div class=pay>✅ To Download PDF Pay R50<br>📱 eWallet / Cash Send to:<br><b>081 347 4435</b><br><br><a style="color:#fff;text-decoration:none;background:#000;padding:12px 20px;border-radius:8px;display:inline-block" href="https://wa.me/27813474435?text=Hi%20Ntuthuko%20I%20paid%20R50%20for%20CV%20Name:%20${encodeURIComponent(n)}%20My%20number:%20${encodeURIComponent(p)}">✅ I PAID - SEND MY PDF NOW</a></div></div>`;
 window.scrollTo(0,document.body.scrollHeight);
 }
 </script>
-<a href="index.html" style="display:block;text-align:center;margin-top:20px">Back to Shop</a>
+<a href="index.html" style="display:block;text-align:center;margin-top:25px;color:#0d6efd">← Back to Shop</a>
 </body></html>
