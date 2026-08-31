@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ntuthuko Market - Multi-Vendor Auction + Fixed Price</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial;margin:0;background:#f0f2f5}
+header{background:#111;color:#fff;padding:16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:bold;font-size:18px}.btn{background:#25D366;color:#fff;border:0;padding:10px 16px;border-radius:8px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-blue{background:#0d6efd}.btn-red{background:#e60000}.btn-black{background:#222}
+.tabs{display:flex;gap:8px;padding:12px;overflow:auto;background:#fff;position:sticky;top:58px;z-index:9}
+.tab{padding:8px 14px;border-radius:20px;border:1px solid #ddd;background:#fff;cursor:pointer;white-space:nowrap}.tab.active{background:#111;color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;max-width:1000px;margin:auto}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.1);display:flex;flex-direction:column}
+.card-img{height:120px;background:linear-gradient(135deg,#ddd,#aaa);display:flex;align-items:center;justify-content:center;font-size:40px}
+.card-body{padding:10px;flex:1;display:flex;flex-direction:column}
+.vendor{font-size:11px;color:#666;background:#f5f5f5;padding:2px 6px;border-radius:10px;display:inline-block;margin-bottom:4px}
+.title{font-weight:bold;font-size:14px;margin:4px 0}.price{color:#e60000;font-weight:bold;margin:4px 0}
+.auction-info{background:#fff3cd;padding:6px;border-radius:6px;font-size:12px;margin:6px 0}
+.timer{font-weight:bold;color:#d00}
+.actions{margin-top:auto;display:flex;gap:6px}
+.actions .btn{flex:1;font-size:12px;padding:8px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20;padding:15px}
+.modal{background:#fff;border-radius:12px;padding:20px;width:100%;max-width:420px;max-height:90vh;overflow:auto}
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc;border-radius:8px}
+.bid-history{max-height:100px;overflow:auto;font-size:12px;background:#f9f9f9;padding:6px;border-radius:6px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">NTUTHUKO MARKET<br><span style="font-size:11px;font-weight:normal;color:#aaa">eBay for KZN • 081 347 4435</span></div>
+<button class="btn btn-blue" onclick="openSell()">+ SELL</button>
+</header>
+
+<div class="tabs">
+<div class="tab active" onclick="filterTab('all',this)">All Items</div>
+<div class="tab" onclick="filterTab('fixed',this)">Fixed Price</div>
+<div class="tab" onclick="filterTab('auction',this)">Live Auctions 🔥</div>
+<div class="tab" onclick="filterTab('my',this)">My Listings</div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<!-- SELL MODAL -->
+<div class="modal-bg" id="sellModal">
+<div class="modal">
+<h3>List Item - Become a Vendor</h3>
+<input id="vName" placeholder="Your Shop Name (e.g. Dlamini Steel)">
+<input id="vPhone" placeholder="WhatsApp Number (e.g. 0813474435)" value="0813474435">
+<input id="pTitle" placeholder="Item Title (e.g. Hilux Bumper Heavy Duty)">
+<select id="pType" onchange="togglePrice()"><option value="fixed">Fixed Price (Buy Now)</option><option value="auction">Auction (Bidding)</option></select>
+<div id="fixedBox"><input id="pPrice" type="number" placeholder="Fixed Price R (e.g. 350)"></div>
+<div id="auctionBox" style="display:none">
+<input id="pStart" type="number" placeholder="Starting Bid R (e.g. 100)">
+<input id="pReserve" type="number" placeholder="Reserve Price R (hidden min)">
+<select id="pDuration"><option value="0.05">Demo: 5 mins</option><option value="1">1 Hour</option><option value="24">24 Hours</option><option value="72">3 Days</option><option value="168">7 Days</option></select>
+</div>
+<textarea id="pDesc" placeholder="Description - condition, location eMatikwe"></textarea>
+<button class="btn" style="width:100%" onclick="addProduct()">List Item - Commission 10% to Platform</button>
+<button class="btn btn-black" style="width:100%;margin-top:6px" onclick="closeModals()">Cancel</button>
+</div>
+</div>
+
+<!-- BID MODAL -->
+<div class="modal-bg" id="bidModal">
+<div class="modal">
+<h3 id="bidTitle"></h3>
+<div class="auction-info">Current Highest: <span id="bidCurrent" class="price"></span><br>Ends in: <span id="bidTimer" class="timer"></span><br><span id="bidReserveNote"></span></div>
+<div class="bid-history" id="bidHistory"></div>
+<input id="bidAmount" type="number" placeholder="Your Bid R">
+<button class="btn btn-red" style="width:100%" onclick="placeBid()">PLACE BID</button>
+<a id="bidWhatsApp" class="btn" style="width:100%;margin-top:6px;text-align:center">Ask Vendor on WhatsApp</a>
+<button class="btn btn-black" style="width:100%;margin-top:6px" onclick="closeModals()">Close</button>
+</div>
+</div>
+
+<script>
+let products = JSON.parse(localStorage.getItem('ntuthuko_market')||'null') || [
+{id:1,title:"Toyota Hilux Door Handle - Metal",type:"fixed",price:350,vendor:"Ntuthuko Metal Works",phone:"27813474435",desc:"Heavy duty metal, not plastic",emoji:"🛻",bids:[]},
+{id:2,title:"Farm Gate Hinges Pair - Heavy",type:"fixed",price:120,vendor:"Ntuthuko Metal Works",phone:"27813474435",desc:"Rust proof, farm gates",emoji:"🔧",bids:[]},
+{id:3,title:"Bakkie Bumper Used - Ford Ranger",type:"auction",price:150,startPrice:150,reserve:400,endTime:Date.now()+1000*60*60*5,vendor:"Sizwe Steel KZN",phone:"27820000000",desc:"Second hand, strong",emoji:"🔥",bids:[{user:"Thabo",amount:150,time:Date.now()-10000},{user:"John",amount:180,time:Date.now()-5000}],current:180},
+{id:4,title:"CV Maker Service - PDF in 2 mins",type:"fixed",price:50,vendor:"Ntuthuko Digital",phone:"27813474435",desc:"Professional CV",emoji:"📄",bids:[]}
+];
+let filter='all', activeBidId=null, timerInterval=null;
+
+function save(){localStorage.setItem('ntuthuko_market',JSON.stringify(products))}
+function togglePrice(){let t=document.getElementById('pType').value;document.getElementById('fixedBox').style.display=t=='fixed'?'block':'none';document.getElementById('auctionBox').style.display=t=='auction'?'block':'none'}
+function openSell(){document.getElementById('sellModal').style.display='flex'}
+function closeModals(){document.getElementById('sellModal').style.display='none';document.getElementById('bidModal').style.display='none';clearInterval(timerInterval);activeBidId=null}
+function filterTab(f,el){filter=f;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');render()}
+
+function addProduct(){
+let title=document.getElementById('pTitle').value, vendor=document.getElementById('vName').value||'Anonymous Vendor', phone=document.getElementById('vPhone').value.replace(/\D/g,''), type=document.getElementById('pType').value;
+if(!title||!phone)return alert('Add title & phone');
+let p={id:Date.now(),title,vendor,phone,desc:document.getElementById('pDesc').value,emoji:type=='auction'?'🔥':'📦',type,bids:[]};
+if(type=='fixed'){p.price=parseFloat(document.getElementById('pPrice').value)||0;if(!p.price)return alert('Add price')}
+else{p.startPrice=parseFloat(document.getElementById('pStart').value)||0;p.price=p.startPrice;p.reserve=parseFloat(document.getElementById('pReserve').value)||0;p.endTime=Date.now()+parseFloat(document.getElementById('pDuration').value)*3600000;p.current=p.startPrice}
+products.unshift(p);save();render();closeModals();alert('Listed! You will get 90% after 10% platform fee. Share marketplace.html');
+}
+
+function render(){
+let grid=document.getElementById('grid');grid.innerHTML='';
+let list=products.filter(p=>{if(filter=='all')return true;if(filter=='fixed')return p.type=='fixed';if(filter=='auction')return p.type=='auction';if(filter=='my')return p.phone.includes('813474435');});
+list.forEach(p=>{
+let isAuction=p.type=='auction';let current=isAuction?(p.current||p.startPrice):p.price;
+let timeLeft=isAuction?Math.max(0,p.endTime-Date.now()):0;
+let timeStr=isAuction?formatTime(timeLeft):'';
+let html=`<div class="card"><div class="card-img">${p.emoji}</div><div class="card-body"><span class="vendor">${p.vendor} ${isAuction?'• AUCTION':''}</span><div class="title">${p.title}</div><div class="price">R${current} ${isAuction?'<span style="font-size:11px;color:#666">(Current Bid)</span>':''}</div>${isAuction?`<div class="auction-info"><span class="timer">${timeStr||'ENDED'}</span><br>${p.bids.length} bids ${p.reserve?'• Reserve R'+p.reserve:''}</div>`: `<div style="font-size:12px;color:#666">${p.desc.slice(0,60)}</div>`}<div class="actions">${isAuction?`<button class="btn btn-red" onclick="openBid(${p.id})">BID NOW</button>`: `<a class="btn" href="https://wa.me/${p.phone}?text=Hi%20${encodeURIComponent(p.vendor)}%20I%20want%20${encodeURIComponent(p.title)}%20R${current}" target="_blank">Buy Now</a>`}<button class="btn btn-black" onclick="openBid(${p.id})">Details</button></div></div></div>`;
+grid.innerHTML+=html;
+});
+}
+
+function formatTime(ms){if(ms<=0)return'ENDED';let s=Math.floor(ms/1000);let h=Math.floor(s/3600);let m=Math.floor((s%3600)/60);let sec=s%60;return`${h}h ${m}m ${sec}s`}
+
+function openBid(id){
+let p=products.find(x=>x.id==id);if(!p)return;activeBidId=id;
+document.getElementById('bidTitle').innerText=p.title;
+document.getElementById('bidCurrent').innerText='R'+(p.type=='auction'?(p.current||p.startPrice):p.price);
+document.getElementById('bidWhatsApp').href=`https://wa.me/${p.phone}?text=Hi%20I%20am%20interested%20in%20${encodeURIComponent(p.title)}`;
+document.getElementById('bidReserveNote').innerText=p.reserve?`Reserve: R${p.reserve} ${p.current>=p.reserve?'✅ Met':'❌ Not met yet'}`:'No reserve';
+let hist=document.getElementById('bidHistory');hist.innerHTML=p.bids.slice(-10).reverse().map(b=>`R${b.amount} - ${b.user} - ${new Date(b.time).toLocaleTimeString()}`).join('<br>')||'No bids yet';
+document.getElementById('bidModal').style.display='flex';
+if(p.type=='auction'){
+clearInterval(timerInterval);
+timerInterval=setInterval(()=>{
+let pp=products.find(x=>x.id==id);if(!pp)return;let left=pp.endTime-Date.now();
+document.getElementById('bidTimer').innerText=formatTime(left);
+if(left<=0){clearInterval(timerInterval);document.getElementById('bidTimer').innerText='AUCTION ENDED - Winner: '+(pp.bids[pp.bids.length-1]?.user||'No bids');}
+},1000);
+}else{document.getElementById('bidTimer').innerText='Fixed Price - Buy anytime'}
+}
+
+function placeBid(){
+if(!activeBidId)return;let p=products.find(x=>x.id==activeBidId);if(p.type!='fixed' && Date.now()>p.endTime)return alert('Auction ended');
+let amt=parseFloat(document.getElementById('bidAmount').value);if(!amt)return alert('Enter bid');
+let min=(p.current||p.startPrice||0)+10;if(amt<min)return alert('Bid must be at least R'+min);
+p.bids.push({user:'You (081***4435)',amount:amt,time:Date.now()});p.current=amt;
+// Anti-sniping: extend 5 mins if bid in last 5 mins
+if(p.endTime-Date.now()<5*60*1000){p.endTime+=5*60*1000;alert('Anti-sniping: Auction extended +5 mins!')}
+save();openBid(activeBidId);render();
+}
+
+render(); setInterval(render, 10000);
+</script>
+</body>
+</html>
