@@ -1,4 +1,125 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MYENDE MARKET - LIVE</title><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=Inter:wght@400;600&display=swap" rel="stylesheet"><script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script><script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script></head><body><div id="root"></div><script type="text/babel">
-const {useState,useEffect,useCallback}=React;const FREE_LIMIT=5;const FEE=15;const FEATURED_FEE=30;const ADMIN_WHATSAPP="27813474435";const todayKey=()=>new Date().toISOString().slice(0,10);const CATS=["All","Electronics","Fashion","Home","Motors","Collectibles"];const SEED=[{id:"1",title:"iPhone 13 128GB - Boxed",price:8500,cat:"Electronics",seller:"Thuthuko",color:"#FF6B5B",desc:"Like new, Pinetown",featured:true,phone:ADMIN_WHATSAPP},{id:"2",title:"Jordan 4 Retro Size 8",price:2500,cat:"Fashion",seller:"Sipho",color:"#CFEA5A",desc:"Authentic",phone:ADMIN_WHATSAPP},{id:"3",title:"Toyota Corolla 2019",price:165000,cat:"Motors",seller:"Myende Motors",color:"#7EC8E3",desc:"Full service",phone:ADMIN_WHATSAPP}];if(!window.storage){window.storage={get:async k=>{const v=localStorage.getItem(k);return v?{value:v}:null},set:async (k,v)=>localStorage.setItem(k,v),delete:async k=>localStorage.removeItem(k)}}
-function App(){const [ready,setReady]=useState(false);const [used,setUsed]=useState(0);const [earned,setEarned]=useState(0);const [view,setView]=useState("browse");const [list,setList]=useState(SEED);const [cat,setCat]=useState("All");const [q,setQ]=useState("");const [sel,setSel]=useState(null);const [user,setUser]=useState(null);const [uname,setUname]=useState("");useEffect(()=>{(async()=>{try{const u=await window.storage.get(`usage:${todayKey()}`);setUsed(u?JSON.parse(u.value):0)}catch{}try{const e=await window.storage.get("fees-total");setEarned(e?JSON.parse(e.value):0)}catch{}try{const s=await window.storage.get("session");if(s)setUser(JSON.parse(s.value))}catch{}setReady(true)})()},[]);const record=useCallback(async(isFeatured=false)=>{const nu=used+1;const fee=isFeatured?FEATURED_FEE:(nu>FREE_LIMIT?FEE:0);setUsed(nu);await window.storage.set(`usage:${todayKey()}`,JSON.stringify(nu));if(fee>0){const ne=earned+fee;setEarned(ne);await window.storage.set("fees-total",JSON.stringify(ne))}return fee},[used,earned]);const filtered=list.filter(l=>(cat==="All"||l.cat===cat)&&l.title.toLowerCase().includes(q.toLowerCase())).sort((a,b)=>(b.featured?1:0)-(a.featured?1:0));if(!ready)return <div style={{background:"#17151F",color:"#fff",padding:40}}>Loading Myende Market...</div>;return(<div style={{background:"#17151F",minHeight:"100vh",color:"#F3EFE6",fontFamily:"Inter,sans-serif",paddingBottom:60}}><div style={{maxWidth:1000,margin:"0 auto",padding:"0 16px"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 0",flexWrap:"wrap",gap:10}}><div style={{fontFamily:"Fraunces",fontSize:26,fontWeight:800}}>MYENDE MARKET <span style={{color:"#CFEA5A",fontSize:14}}>💰 LIVE</span></div><div style={{display:"flex",gap:8}}><button onClick={()=>setView("browse")} style={navBtn(view==="browse")}>Browse</button><button onClick={()=>setView("sell")} style={navBtn(view==="sell")}>+ Sell</button><button onClick={()=>setView("dashboard")} style={navBtn(view==="dashboard")}>Dashboard R{earned}</button>{user?<button onClick={async()=>{setUser(null);await window.storage.delete("session")}} style={navBtn(false)}>@{user}</button>:<button onClick={()=>setView("login")} style={{...navBtn(false),border:"1px solid #CFEA5A",color:"#CFEA5A"}}>Login</button>}</div></div><div style={{background:"linear-gradient(135deg,#211E2C,#2a2538)",border:"1px solid #3A3548",borderRadius:12,padding:14,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:10,marginBottom:18}}><div style={{fontSize:13}}>{used>=FREE_LIMIT?<span>🔥 Free used! Next = <b style={{color:"#FF6B5B"}}>R{FEE}</b> fee to you</span>:<span>✅ <b style={{color:"#CFEA5A"}}>{FREE_LIMIT-used}</b> free left today ({used}/{FREE_LIMIT})</span>} • Featured = R{FEATURED_FEE} TOP</div><div style={{fontSize:13}}>Your Earnings: <b style={{color:"#CFEA5A"}}>R{earned}</b></div></div>{view==="browse"&&<><div style={{display:"flex",gap:10,marginBottom:16}}><input placeholder="Search anything..." value={q} onChange={e=>setQ(e.target.value)} style={inp}/><select value={cat} onChange={e=>setCat(e.target.value)} style={{...inp,width:140}}>{CATS.map(c=><option key={c} value={c}>{c}</option>)}</select></div><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>{filtered.map(it=><div key={it.id} onClick={()=>setSel(it)} style={{background:it.featured?"linear-gradient(135deg,#2a2410,#211E2C)":"#211E2C",border:it.featured?"1px solid #d4a017":"1px solid #3A3548",borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative"}}>{it.featured&&<div style={{position:"absolute",top:8,left:8,background:"#d4a017",color:"#000",fontSize:10,fontWeight:800,padding:"3px 8px",borderRadius:10}}>⭐ FEATURED</div>}<div style={{height:110,background:`linear-gradient(135deg,${it.color},#17151F)`}}/><div style={{padding:12}}><div style={{fontSize:11,opacity:.6}}>{it.cat} • @{it.seller}</div><div style={{fontFamily:"Fraunces",fontSize:16,margin:"4px 0"}}>{it.title}</div><div style={{fontFamily:"Fraunces",fontSize:18,color:"#CFEA5A"}}>R{it.price.toLocaleString()}</div></div></div>)}</div></>}{view==="sell"&&<SellForm onRecord={record} list={list} setList={setList} user={user} admin={ADMIN_WHATSAPP}/>}{view==="dashboard"&&<div style={{maxWidth:500,margin:"0 auto"}}><h2 style={{fontFamily:"Fraunces"}}>💰 Your Money - R{earned}</h2><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:16}}><Box label="Today Used" value={`${used}/${FREE_LIMIT}`}/><Box label="Total Earned" value={`R${earned}`} color="#CFEA5A"/><Box label="Featured Fee" value={`R${FEATURED_FEE}`}/><Box label="Normal Fee" value={`R${FEE}`}/></div><div style={{background:"#211E2C",borderRadius:10,padding:14,marginTop:14,fontSize:13,lineHeight:1.6}}>✅ LIVE with your number: +27 81 347 4435<br/><br/><b>How you get paid TODAY:</b><br/>1. Seller clicks Sell + Featured<br/>2. Your WhatsApp opens automatically<br/>3. You reply: "Send R30 to Capitec eWallet to 0813474435. Send screenshot"<br/>4. They pay, you keep money!<br/><br/>Link: myendentuthuko80-debug.github.io/marketplace.html</div></div>}{view==="login"&&<div style={{maxWidth:360,margin:"40px auto"}}><h2 style={{fontFamily:"Fraunces"}}>Login</h2><input placeholder="Username" value={uname} onChange={e=>setUname(e.target.value)} style={{...inp,width:"100%",marginTop:12}}/><button onClick={async()=>{if(!uname)return;setUser(uname);await window.storage.set("session",JSON.stringify(uname));setView("browse")}} style={{width:"100%",padding:12,borderRadius:8,border:"none",background:"#FF6B5B",fontWeight:700,marginTop:10,cursor:"pointer"}}>Login</button></div>}</div>{sel&&<div onClick={()=>setSel(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,zIndex:99}}><div onClick={e=>e.stopPropagation()} style={{background:"#211E2C",borderRadius:14,padding:20,maxWidth:400,width:"100%",border:"1px solid #444"}}><div style={{height:120,borderRadius:8,background:`linear-gradient(135deg,${sel.color},#000)`,marginBottom:12}}/><div style={{fontFamily:"Fraunces",fontSize:22}}>{sel.title}</div><div style={{fontSize:22,color:"#CFEA5A",fontFamily:"Fraunces",marginTop:10}}>R{sel.price.toLocaleString()}</div><button onClick={()=>{const msg=encodeURIComponent(`Hi! I want ${sel.title} for R${sel.price} from MYENDE MARKET`);window.open(`https://wa.me/${sel.phone||ADMIN_WHATSAPP}?text=${msg}`)}} style={{width:"100%",padding:12,borderRadius:8,border:"none",background:"#25D366",fontWeight:800,marginTop:14,cursor:"pointer"}}>Buy on WhatsApp</button><button onClick={()=>setSel(null)} style={{width:"100%",padding:10,borderRadius:8,background:"none",border:"1px solid #444",color:"#999",marginTop:8}}>Close</button></div></div>}</div>);}function SellForm({onRecord,list,setList,user,admin}){const [title,setTitle]=useState("");const [price,setPrice]=useState("");const [cat,setCat]=useState("Electronics");const [isFeat,setIsFeat]=useState(false);const submit=async e=>{e.preventDefault();if(!title||!price)return alert("Add title & price");const fee=await onRecord(isFeat);const newItem={id:Date.now().toString(),title,price:parseFloat(price),cat,seller:user||"you",color:"#7EC8E3",desc:isFeat?"FEATURED":"",featured:isFeat,phone:admin};setList([newItem,...list]);if(fee>0){const msg=encodeURIComponent(`Hi Admin! I listed "${title}" for R${price}. I owe R${fee} ${isFeat?"for FEATURED boost":"fee"}. Where to send Capitec 0813474435?`);window.open(`https://wa.me/${admin}?text=${msg}`,"_blank");alert(`Listed! You owe R${fee}. WhatsApp opened to 0813474435`);}else alert("Listed FREE!");setTitle("");setPrice("");};return <div style={{maxWidth:480,margin:"0 auto"}}><h2 style={{fontFamily:"Fraunces"}}>List Item</h2><form onSubmit={submit} style={{display:"flex",flexDirection:"column",gap:10,marginTop:16}}><input placeholder="What are you selling?" value={title} onChange={e=>setTitle(e.target.value)} style={inp}/><input placeholder="Price in Rands" type="number" value={price} onChange={e=>setPrice(e.target.value)} style={inp}/><select value={cat} onChange={e=>setCat(e.target.value)} style={inp}>{CATS.slice(1).map(c=><option key={c}>{c}</option>)}</select><label style={{display:"flex",alignItems:"center",gap:8,fontSize:14,background:isFeat?"rgba(212,160,23,0.15)":"#211E2C",padding:10,borderRadius:8,border:isFeat?"1px solid #d4a017":"1px solid #333",cursor:"pointer"}}><input type="checkbox" checked={isFeat} onChange={e=>setIsFeat(e.target.checked)}/> ⭐ FEATURED - R30 (TOP + gold badge)</label><button type="submit" style={{padding:12,borderRadius:8,border:"none",background:"#CFEA5A",color:"#000",fontWeight:800,cursor:"pointer"}}>Post Listing</button></form></div>}const navBtn=active=>({padding:"8px 14px",borderRadius:20,border:"none",background:active?"#FF6B5B":"transparent",color:active?"#000":"#A79FB0",fontSize:13,fontWeight:600,cursor:"pointer"});const inp={padding:"11px 12px",borderRadius:8,border:"1px solid #3A3548",background:"#17151F",color:"#F3EFE6",fontSize:14};const Box=({label,value,color})=><div style={{background:"#211E2C",border:"1px solid #333",borderRadius:10,padding:14}}><div style={{fontSize:11,opacity:.6}}>{label}</div><div style={{fontFamily:"Fraunces",fontSize:22,marginTop:4,color:color||"#fff"}}>{value}</div></div>;const root=ReactDOM.createRoot(document.getElementById('root'));root.render(<App/>);
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYENDE MARKET - LIVE MONEY MODE</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;background:#17151F}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback} = React;
+const FREE_LIMIT = 5;
+const FEE = 15;
+const FEATURED_FEE = 30;
+const ADMIN_WHATSAPP = "27813474435";
+const todayKey = () => new Date().toISOString().slice(0,10);
+const CATS = ["All","Electronics","Fashion","Home","Motors","Collectibles"];
+const SEED = [
+  {id:"1",title:"iPhone 13 128GB - Boxed",price:8500,cat:"Electronics",seller:"Thuthuko",color:"#FF6B5B",desc:"Like new, Pinetown",featured:true},
+  {id:"2",title:"Jordan 4 Retro Size 8",price:2500,cat:"Fashion",seller:"Sipho",color:"#CFEA5A",desc:"Authentic"},
+  {id:"3",title:"Toyota Corolla 2019",price:165000,cat:"Motors",seller:"Myende Motors",color:"#7EC8E3",desc:"Full service"}
+];
+if(!window.storage){
+  window.storage={
+    get: async k => { const v=localStorage.getItem(k); return v?{value:v}:null },
+    set: async (k,v) => localStorage.setItem(k,v),
+    delete: async k => localStorage.removeItem(k)
+  }
+}
+function App(){
+  const [ready,setReady]=useState(false);
+  const [used,setUsed]=useState(0);
+  const [earned,setEarned]=useState(0);
+  const [view,setView]=useState("browse");
+  const [list,setList]=useState(SEED);
+  const [cat,setCat]=useState("All");
+  const [q,setQ]=useState("");
+  const [sel,setSel]=useState(null);
+  const [user,setUser]=useState(null);
+  const [uname,setUname]=useState("");
+  useEffect(()=>{
+    (async()=>{
+      try{const u=await window.storage.get(`usage:${todayKey()}`); setUsed(u?JSON.parse(u.value):0)}catch{}
+      try{const e=await window.storage.get("fees-total"); setEarned(e?JSON.parse(e.value):0)}catch{}
+      try{const s=await window.storage.get("session"); if(s)setUser(JSON.parse(s.value))}catch{}
+      setReady(true)
+    })()
+  },[]);
+  const record=useCallback(async(isFeatured=false)=>{
+    const nu=used+1;
+    const fee=isFeatured?FEATURED_FEE:(nu>FREE_LIMIT?FEE:0);
+    setUsed(nu);
+    await window.storage.set(`usage:${todayKey()}`,JSON.stringify(nu));
+    if(fee>0){
+      const ne=earned+fee;
+      setEarned(ne);
+      await window.storage.set("fees-total",JSON.stringify(ne))
+    }
+    return fee
+  },[used,earned]);
+  const filtered=list.filter(l=>(cat==="All"||l.cat===cat)&&l.title.toLowerCase().includes(q.toLowerCase())).sort((a,b)=>(b.featured?1:0)-(a.featured?1:0));
+  if(!ready) return <div style={{background:"#17151F",color:"#fff",padding:40}}>Loading Myende Market...</div>;
+  return (
+    <div style={{background:"#17151F",minHeight:"100vh",color:"#F3EFE6",fontFamily:"Inter,sans-serif",paddingBottom:60}}>
+      <div style={{maxWidth:1000,margin:"0 auto",padding:"0 16px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 0",flexWrap:"wrap",gap:10}}>
+          <div style={{fontFamily:"Fraunces",fontSize:26,fontWeight:800}}>MYENDE MARKET <span style={{color:"#CFEA5A",fontSize:14}}>💰 LIVE</span></div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <button onClick={()=>setView("browse")} style={navBtn(view==="browse")}>Browse</button>
+            <button onClick={()=>setView("sell")} style={navBtn(view==="sell")}>+ Sell</button>
+            <button onClick={()=>setView("dashboard")} style={navBtn(view==="dashboard")}>Dashboard R{earned}</button>
+            {user?<button onClick={async()=>{setUser(null);await window.storage.delete("session")}} style={navBtn(false)}>@{user}</button>:<button onClick={()=>setView("login")} style={{...navBtn(false),border:"1px solid #CFEA5A",color:"#CFEA5A"}}>Login</button>}
+          </div>
+        </div>
+        <div style={{background:"linear-gradient(135deg,#211E2C,#2a2538)",border:"1px solid #3A3548",borderRadius:12,padding:14,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:10,marginBottom:18}}>
+          <div style={{fontSize:13}}>{used>=FREE_LIMIT?<span>🔥 Free used! Next = <b style={{color:"#FF6B5B"}}>R{FEE}</b> fee to you</span>:<span>✅ <b style={{color:"#CFEA5A"}}>{FREE_LIMIT-used}</b> free left today ({used}/{FREE_LIMIT})</span>} • Featured = R{FEATURED_FEE} TOP</div>
+          <div style={{fontSize:13}}>Your Earnings: <b style={{color:"#CFEA5A"}}>R{earned}</b></div>
+        </div>
+        {view==="browse"&&<>
+          <div style={{display:"flex",gap:10,marginBottom:16}}><input placeholder="Search anything..." value={q} onChange={e=>setQ(e.target.value)} style={inp}/><select value={cat} onChange={e=>setCat(e.target.value)} style={{...inp,width:140}}>{CATS.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>
+            {filtered.map(it=><div key={it.id} onClick={()=>setSel(it)} style={{background:it.featured?"linear-gradient(135deg,#2a2410,#211E2C)":"#211E2C",border:it.featured?"1px solid #d4a017":"1px solid #3A3548",borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative"}}>
+              {it.featured&&<div style={{position:"absolute",top:8,left:8,background:"#d4a017",color:"#000",fontSize:10,fontWeight:800,padding:"3px 8px",borderRadius:10}}>⭐ FEATURED</div>}
+              <div style={{height:110,background:`linear-gradient(135deg,${it.color},#17151F)`}}/>
+              <div style={{padding:12}}><div style={{fontSize:11,opacity:.6}}>{it.cat} • @{it.seller}</div><div style={{fontFamily:"Fraunces",fontSize:16,margin:"4px 0"}}>{it.title}</div><div style={{fontFamily:"Fraunces",fontSize:18,color:"#CFEA5A"}}>R{it.price.toLocaleString()}</div></div>
+            </div>)}
+          </div>
+        </>}
+        {view==="sell"&&<SellForm onRecord={record} list={list} setList={setList} user={user} admin={ADMIN_WHATSAPP}/>}
+        {view==="dashboard"&&<div style={{maxWidth:500,margin:"0 auto"}}><h2 style={{fontFamily:"Fraunces"}}>💰 Your Money - R{earned}</h2><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:16}}><Box label="Today Used" value={`${used}/${FREE_LIMIT}`}/><Box label="Total Earned" value={`R${earned}`} color="#CFEA5A"/><Box label="Featured Fee" value={`R${FEATURED_FEE}`}/><Box label="Normal Fee" value={`R${FEE}`}/></div><div style={{background:"#211E2C",borderRadius:10,padding:14,marginTop:14,fontSize:13,lineHeight:1.6}}>✅ LIVE: +27 81 347 4435<br/><br/><b>How you get paid TODAY:</b><br/>1. Seller clicks Sell + Featured<br/>2. WhatsApp opens to you<br/>3. You reply: "Send R30 to 0813474435 via eWallet. Send screenshot"<br/>4. They pay, you keep money!</div></div>}
+        {view==="login"&&<div style={{maxWidth:360,margin:"40px auto"}}><h2 style={{fontFamily:"Fraunces"}}>Login</h2><input placeholder="Username" value={uname} onChange={e=>setUname(e.target.value)} style={{...inp,width:"100%",marginTop:12}}/><button onClick={async()=>{if(!uname)return;setUser(uname);await window.storage.set("session",JSON.stringify(uname));setView("browse")}} style={{width:"100%",padding:12,borderRadius:8,border:"none",background:"#FF6B5B",fontWeight:700,marginTop:10,cursor:"pointer"}}>Login</button></div>}
+      </div>
+      {sel&&<div onClick={()=>setSel(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,zIndex:99}}><div onClick={e=>e.stopPropagation()} style={{background:"#211E2C",borderRadius:14,padding:20,maxWidth:400,width:"100%",border:"1px solid #444"}}><div style={{height:120,borderRadius:8,background:`linear-gradient(135deg,${sel.color},#000)`,marginBottom:12}}/><div style={{fontFamily:"Fraunces",fontSize:22}}>{sel.title}</div><div style={{fontSize:22,color:"#CFEA5A",fontFamily:"Fraunces",marginTop:10}}>R{sel.price.toLocaleString()}</div><button onClick={()=>{const msg=encodeURIComponent(`Hi! I want ${sel.title} for R${sel.price} from MYENDE MARKET`);window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`)}} style={{width:"100%",padding:12,borderRadius:8,border:"none",background:"#25D366",fontWeight:800,marginTop:14,cursor:"pointer"}}>Buy on WhatsApp - R{sel.price}</button><button onClick={()=>setSel(null)} style={{width:"100%",padding:10,borderRadius:8,background:"none",border:"1px solid #444",color:"#999",marginTop:8}}>Close</button></div></div>}
+    </div>
+  );
+}
+function SellForm({onRecord,list,setList,user,admin}){
+  const [title,setTitle]=useState(""); const [price,setPrice]=useState(""); const [cat,setCat]=useState("Electronics"); const [isFeat,setIsFeat]=useState(false);
+  const submit=async e=>{
+    e.preventDefault(); if(!title||!price)return alert("Add title & price");
+    const fee=await onRecord(isFeat);
+    const newItem={id:Date.now().toString(),title,price:parseFloat(price),cat,seller:user||"you",color:"#7EC8E3",desc:isFeat?"FEATURED":"",featured:isFeat,phone:admin};
+    setList([newItem,...list]);
+    if(fee>0){
+      const msg=encodeURIComponent(`Hi Admin! I listed "${title}" for R${price}. I owe R${fee} ${isFeat?"for FEATURED boost":"fee"}. Where to send Capitec 0813474435?`);
+      window.open(`https://wa.me/${admin}?text=${msg}`,"_blank");
+      alert(`Listed! You owe R${fee}. WhatsApp opened to 0813474435`);
+    }else alert("Listed FREE!");
+    setTitle("");setPrice("");
+  };
+  return <div style={{maxWidth:480,margin:"0 auto"}}><h2 style={{fontFamily:"Fraunces"}}>List Item</h2><form onSubmit={submit} style={{display:"flex",flexDirection:"column",gap:10,marginTop:16}}><input placeholder="What are you selling?" value={title} onChange={e=>setTitle(e.target.value)} style={inp}/><input placeholder="Price in Rands" type="number" value={price} onChange={e=>setPrice(e.target.value)} style={inp}/><select value={cat} onChange={e=>setCat(e.target.value)} style={inp}>{CATS.slice(1).map(c=><option key={c}>{c}</option>)}</select><label style={{display:"flex",alignItems:"center",gap:8,fontSize:14,background:isFeat?"rgba(212,160,23,0.15)":"#211E2C",padding:10,borderRadius:8,border:isFeat?"1px solid #d4a017":"1px solid #333",cursor:"pointer"}}><input type="checkbox" checked={isFeat} onChange={e=>setIsFeat(e.target.checked)}/> ⭐ FEATURED - R30 (TOP + gold badge)</label><button type="submit" style={{padding:12,borderRadius:8,border:"none",background:"#CFEA5A",color:"#000",fontWeight:800,cursor:"pointer"}}>Post Listing</button></form></div>
+}
+const navBtn=active=>({padding:"8px 14px",borderRadius:20,border:"none",background:active?"#FF6B5B":"transparent",color:active?"#000":"#A79FB0",fontSize:13,fontWeight:600,cursor:"pointer"});
+const inp={padding:"11px 12px",borderRadius:8,border:"1px solid #3A3548",background:"#17151F",color:"#F3EFE6",fontSize:14};
+const Box=({label,value,color})=><div style={{background:"#211E2C",border:"1px solid #333",borderRadius:10,padding:14}}><div style={{fontSize:11,opacity:.6}}>{label}</div><div style={{fontFamily:"Fraunces",fontSize:22,marginTop:4,color:color||"#fff"}}>{value}</div></div>;
+const root=ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App/>);
+</script>
+</body>
+</html>
