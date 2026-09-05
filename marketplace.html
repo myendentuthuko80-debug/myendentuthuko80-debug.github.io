@@ -1,17 +1,166 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Myende Market - Colorful</title><script src="https://unpkg.com/react@18/umd/react.production.min.js"></script><script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Inter:wght@700&display=swap');*{box-sizing:border-box}body{margin:0}</style></head><body><div id="root"></div><script type="text/babel">
-const {useState,useEffect,useCallback,useRef}=React;const ADMIN="27813474435";const FREE=3;const FEE=15;const FEAT=30;const todayKey=()=>new Date().toISOString().slice(0,10);
-const CATS=[{id:"All",l:"All",e:"✨",bg:"#fff"},{id:"Electronics",l:"Phones",e:"📱",bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)"},{id:"Sneakers",l:"Drip",e:"👟",bg:"linear-gradient(135deg,#CFEA5A,#A8E635)"},{id:"Vehicles",l:"Cars",e:"🚗",bg:"linear-gradient(135deg,#7EC8E3,#A7E3F2)"},{id:"Fashion",l:"Fashion",e:"👜",bg:"linear-gradient(135deg,#FFD700,#FFA500)"}];
-const SEED=[{id:"1",t:"iPhone 15 Pro Max 256GB",p:18500,c:"Electronics",s:"Durban Phones",bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)",e:"📱",sz:"256GB",auth:1,f:1},{id:"2",t:"Jordan 4 Retro Black",p:3200,c:"Sneakers",s:"KZN Kicks",bg:"linear-gradient(135deg,#CFEA5A,#A8E635)",e:"👟",sz:"9",auth:1,f:1},{id:"3",t:"Toyota Corolla 2019",p:185000,c:"Vehicles",s:"Pin Auto",bg:"linear-gradient(135deg,#7EC8E3,#A7E3F2)",e:"🚗",sz:"2019",auth:0},{id:"4",t:"Louis Vuitton Bag",p:12500,c:"Fashion",s:"Luxury SA",bg:"linear-gradient(135deg,#FFD700,#FFA500)",e:"👜",sz:"M",auth:1,f:1}];
-const LIVE=[{n:"Thuthuko Live",t:"Phones & Tech",vw:124,bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)",e:"📱"},{n:"KZN Drip Plug",t:"Sneakers Drop",vw:89,bg:"linear-gradient(135deg,#CFEA5A,#A8E635)",e:"👟"},{n:"Luxury Auntie",t:"Handbags",vw:203,bg:"linear-gradient(135deg,#FFD700,#FFA500)",e:"👜"}];
-if(!window.storage)window.storage={get:async k=>{const v=localStorage.getItem(k);return v?{value:v}:null},set:async(k,v)=>localStorage.setItem(k,v)}};
-function App(){const [ready,setR]=useState(false);const [used,setUsed]=useState(0);const [earn,setEarn]=useState(0);const [view,setView]=useState("browse");const [list,setList]=useState(SEED);const [cat,setCat]=useState("All");const [q,setQ]=useState("");const [sel,setSel]=useState(null);const [showF,setShowF]=useState(false);const [pr,setPr]=useState([0,200000]);const [szF,setSzF]=useState("All");const [authF,setAuthF]=useState(false);const [cam,setCam]=useState(null);const fileRef=useRef(null);
-useEffect(()=>{(async()=>{try{const u=await window.storage.get(`usage:${todayKey()}`);setUsed(u?JSON.parse(u.value):0)}catch{}try{const e=await window.storage.get("fees-total");setEarn(e?JSON.parse(e.value):0)}catch{}setR(true)})()},[]);
-const record=useCallback(async(isF=false)=>{const nu=used+1;const fee=isF?FEAT:(nu>FREE?FEE:0);setUsed(nu);await window.storage.set(`usage:${todayKey()}`,JSON.stringify(nu));if(fee>0){const ne=earn+fee;setEarn(ne);await window.storage.set("fees-total",JSON.stringify(ne))}return fee},[used,earn]);
-               const handleCam=e=>{const f=e.target.files[0];if(!f)return;setCam({name:f.name,url:URL.createObjectURL(f)});setTimeout(()=>setQ(f.name.split('.')[0].slice(0,8)),500)};
-let filt=list.filter(l=>{const mC=cat==="All"||l.c===cat;const mQ=l.t.toLowerCase().includes(q.toLowerCase());const mP=l.p>=pr[0]&&l.p<=pr[1];const mS=szF==="All"||l.sz===szF;const mA=!authF||l.auth;return mC&&mQ&&mP&&mS&&mA}).sort((a,b)=>(b.f?1:0)-(a.f?1:0));
-if(!ready)return <div style={{padding:40}}>Loading...</div>;
-return(<div style={{background:"#FFF7ED",minHeight:"100vh",fontFamily:"Inter,sans-serif"}}><div style={{background:"linear-gradient(135deg,#17151F,#2D1B4E)",color:"#fff",position:"sticky",top:0,zIndex:20,borderBottom:"4px solid #FF6B5B"}}><div style={{maxWidth:1100,margin:"0 auto",padding:"12px"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",gap:8,alignItems:"center"}}><div style={{width:36,height:36,borderRadius:10,background:"linear-gradient(135deg,#FF6B5B,#CFEA5A)",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:"#000"}}>M</div><div><div style={{fontFamily:"Fraunces",fontSize:20,fontWeight:900}}>MYENDE MARKET</div><div style={{fontSize:9,color:"#CFEA5A"}}>eBay for KZN • Camera • Live</div></div></div><div style={{display:"flex",gap:6}}><button onClick={()=>setView("browse")} style={nb(view==="browse")}>Browse</button><button onClick={()=>setView("sell")} style={{...nb(view==="sell"),background:"#CFEA5A",color:"#000"}}>+ Sell</button><button onClick={()=>setView("dashboard")} style={nb(view==="dashboard")}>R{earn}</button></div></div><div style={{marginTop:10,display:"flex",gap:6,background:"#fff",borderRadius:12,padding:5,border:"2px solid #FF6B5B"}}><div style={{flex:1,display:"flex",alignItems:"center",gap:6,padding:"0 8px"}}>🔍<input value={q} onChange={e=>{setQ(e.target.value);setCam(null)}} placeholder="Search iPhone, Jordan" style={{flex:1,border:"none",outline:"none",fontSize:14}}/></div><button onClick={()=>fileRef.current?.click()} style={{background:cam?"#FF6B5B":"linear-gradient(135deg,#7EC8E3,#A7E3F2)",border:"none",borderRadius:8,padding:"6px 10px",fontWeight:700,fontSize:12}}>📷 Camera</button><button onClick={()=>setShowF(!showF)} style={{background:showF?"#000":"#eee",color:showF?"#fff":"#000",border:"none",borderRadius:8,padding:"6px 10px",fontSize:12}}>⚙️ Filters</button><input ref={fileRef} type="file" accept="image/*" onChange={handleCam} style={{display:"none"}}/></div>{cam&&<div style={{marginTop:8,background:"linear-gradient(135deg,#CFEA5A,#E0FF7A)",borderRadius:8,padding:8,display:"flex",gap:8,alignItems:"center",color:"#000",fontSize:12}}><img src={cam.url} style={{width:40,height:40,borderRadius:6}}/><div><b>📸 Camera:</b> {cam.name}</div><button onClick={()=>{setCam(null);setQ("")}} style={{marginLeft:"auto",background:"#000",color:"#fff",border:"none",borderRadius:6,padding:"4px 8px"}}>X</button></div>}{showF&&<div style={{marginTop:8,background:"#fff",borderRadius:10,padding:10,color:"#000",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}}><div><b>💰 Price</b><br/>R{pr[0]}-{pr[1]}<br/><input type="range" min="0" max="200000" value={pr[1]} onChange={e=>setPr([pr[0],parseInt(e.target.value)])} style={{width:"100%"}}/></div><div><b>📏 Size</b><br/><select value={szF} onChange={e=>setSzF(e.target.value)} style={{width:"100%"}}><option>All</option><option>6</option><option>7</option><option>8</option><option>M</option><option>L</option></select></div><div><b>✅ Auth</b><br/><label><input type="checkbox" checked={authF} onChange={e=>setAuthF(e.target.checked)}/> Only Auth</label></div></div>}</div></div>
- <div style={{maxWidth:1100,margin:"0 auto",padding:"12px"}}><div style={{background:"linear-gradient(135deg,#FF6B5B,#FF8E53)",borderRadius:10,padding:"8px 12px",color:"#fff",display:"flex",justifyContent:"space-between",fontSize:12,fontWeight:600,marginBottom:10}}><span>{used>=FREE?`🔥 Free used! Next R${FEE}`:`✅ ${FREE-used} FREE left`}</span><span>💰 R{earn}</span></div><div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:6}}>{CATS.map(c=><button key={c.id} onClick={()=>setCat(c.id)} style={{background:cat===c.id?c.bg:"#fff",border:cat===c.id?"none":"1px solid #eee",borderRadius:18,padding:"8px 12px",fontWeight:700,fontSize:12}}>{c.e} {c.l}</button>)}</div><div style={{margin:"12px 0"}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><h3 style={{fontFamily:"Fraunces",margin:0,fontSize:16}}>🔴 Myende Live</h3><span style={{fontSize:10,background:"#FF6B5B",color:"#fff",padding:"3px 8px",borderRadius:12}}>LIVE NOW</span></div><div style={{display:"flex",gap:8,overflowX:"auto"}}>{LIVE.map((h,i)=><div key={i} style={{minWidth:150,background:h.bg,borderRadius:12,padding:10,color:"#000"}}><div style={{background:"red",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:8,display:"inline-block"}}>● LIVE {h.vw}</div><div style={{fontSize:24}}>{h.e}</div><div style={{fontWeight:800,fontSize:12}}>{h.n}</div><div style={{fontSize:10}}>{h.t}</div><button style={{marginTop:6,background:"#000",color:"#fff",border:"none",borderRadius:6,padding:"4px 8px",fontSize:10,width:"100%"}}>Watch</button></div>)}</div></div>{view==="browse"&&<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:10}}>{filt.map(it=><div key={it.id} onClick={()=>setSel(it)} style={{background:"#fff",borderRadius:14,overflow:"hidden",cursor:"pointer",border:it.f?"2px solid #FFD700":"1px solid #f0e6d3",position:"relative"}}>{it.f&&<div style={{position:"absolute",top:6,left:6,background:"#FFD700",color:"#000",fontSize:8,fontWeight:900,padding:"3px 6px",borderRadius:10}}>⭐ FEAT</div>}{it.auth&&<div style={{position:"absolute",top:6,right:6,background:"#000",color:"#CFEA5A",fontSize:7,padding:"2px 5px",borderRadius:8}}>✓ AUTH</div>}<div style={{height:110,background:it.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:46}}>{it.e}</div><div style={{padding:8}}><div style={{fontSize:9,color:"#888"}}>{it.c} • {it.sz}</div><div style={{fontWeight:700,fontSize:12}}>{it.t}</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontFamily:"Fraunces",fontWeight:900,fontSize:14}}>R{it.p.toLocaleString()}</div><div style={{background:"#17151F",color:"#CFEA5A",fontSize:9,padding:"3px 6px",borderRadius:8}}>Buy</div></div></div></div>)}</div>}{view==="sell"&&<SellForm onRecord={record} list={list} setList={setList} admin={ADMIN}/>} {view==="dashboard"&&<div style={{maxWidth:480,margin:"0 auto"}}><h2>💰 R{earn}</h2><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}><Box l="Free Used" v={`${used}/${FREE}`} bg="linear-gradient(135deg,#7EC8E3,#A7E3F2)"/><Box l="Earned" v={`R${earn}`} bg="linear-gradient(135deg,#CFEA5A,#A8E635)"/><Box l="Featured" v={`R${FEAT}`} bg="linear-gradient(135deg,#FFD700,#FFA500)"/><Box l="Listings" v={`${list.length}`} bg="linear-gradient(135deg,#FF6B5B,#FF8E53)"/></div></div>}</div>{sel&&<div onClick={()=>setSel(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",display:"flex",alignItems:"center",justifyContent:"center",padding:14,zIndex:99}}><div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:16,overflow:"hidden",maxWidth:360,width:"100%"}}><div style={{height:140,background:sel.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:60}}>{sel.e}</div><div style={{padding:14}}><div style={{fontSize:10,color:"#888"}}>{sel.c} • {sel.sz}</div><div style={{fontFamily:"Fraunces",fontSize:18,fontWeight:900}}>{sel.t}</div><div style={{fontFamily:"Fraunces",fontSize:24,fontWeight:900,marginTop:10}}>R{sel.p.toLocaleString()}</div><button onClick={()=>{const m=encodeURIComponent(`Hi! I want ${sel.t} for R${sel.p}`);window.open(`https://wa.me/${ADMIN}?text=${m}`)}} style={{width:"100%",padding:12,borderRadius:10,border:"none",background:"linear-gradient(135deg,#25D366,#128C7E)",color:"#fff",fontWeight:900,marginTop:10}}>💬 Buy on WhatsApp</button><button onClick={()=>setSel(null)} style={{width:"100%",padding:8,borderRadius:8,background:"#f5f5f5",border:"1px solid #eee",color:"#888",marginTop:6}}>Close</button></div></div></div>}</div>);}
-function SellForm({onRecord,list,setList,admin}){const [t,setT]=useState("");const [p,setP]=useState("");const [c,setC]=useState("Electronics");const [sz,setSz]=useState("M");const [auth,setAuth]=useState(false);const [feat,setFeat]=useState(false);
-const submit=async e=>{e.preventDefault();if(!t||!p)return alert("Add title & price");const fee=await onRecord(feat);const cat=CATS.find(x=>x.id===c)||CATS[1];const ni={id:Date.now().toString(),t,p:parseFloat(p),c,s:"you",bg:cat.bg,e:cat.e,sz,auth:auth?1:0,v:0,f:feat?1:0};setList([ni,...list]);if(fee>0){const m=encodeURIComponent(`Hi Admin! I listed "${t}" for R${p}. I owe R${fee}`);window.open(`https://wa.me/${admin}?text=${m}`,"_blank");}alert(fee>0?`Listed! Owe R${fee}`:"Listed FREE!");setT("");setP("");};
-return <div style={{maxWidth:460,margin:"0 auto",background:"#fff",borderRadius:14,padding:16,border:"2px solid #FFE4B5"}}><h2 style={{fontFamily:"Fraunces",fontSize:18}}>🌈 List Item</h2><form onSubmit={submit} style={{display:"flex 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Myende Market</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Inter:wght@700&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#FFF7ED}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useCallback,useRef} = React;
+const ADMIN="27813474435";
+const FREE=3; const FEE=15; const FEAT=30;
+const todayKey=()=>new Date().toISOString().slice(0,10);
+const CATS=[
+ {id:"All",l:"All",e:"✨",bg:"#ffffff"},
+ {id:"Electronics",l:"Phones",e:"📱",bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)"},
+ {id:"Sneakers",l:"Drip",e:"👟",bg:"linear-gradient(135deg,#CFEA5A,#A8E635)"},
+ {id:"Vehicles",l:"Cars",e:"🚗",bg:"linear-gradient(135deg,#7EC8E3,#A7E3F2)"},
+ {id:"Fashion",l:"Fashion",e:"👜",bg:"linear-gradient(135deg,#FFD700,#FFA500)"}
+];
+const SEED=[
+ {id:"1",t:"iPhone 15 Pro Max 256GB",p:18500,c:"Electronics",s:"Durban Phones",bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)",e:"📱",sz:"256GB",auth:1,f:1},
+ {id:"2",t:"Jordan 4 Retro Black",p:3200,c:"Sneakers",s:"KZN Kicks",bg:"linear-gradient(135deg,#CFEA5A,#A8E635)",e:"👟",sz:"9",auth:1,f:1},
+ {id:"3",t:"Toyota Corolla 2019",p:185000,c:"Vehicles",s:"Pin Auto",bg:"linear-gradient(135deg,#7EC8E3,#A7E3F2)",e:"🚗",sz:"2019",auth:0},
+ {id:"4",t:"Louis Vuitton Bag",p:12500,c:"Fashion",s:"Luxury SA",bg:"linear-gradient(135deg,#FFD700,#FFA500)",e:"👜",sz:"M",auth:1,f:1}
+];const LIVE=[
+ {n:"Thuthuko Live",t:"Phones & Tech",vw:124,bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)",e:"📱"},
+ {n:"KZN Drip Plug",t:"Sneakers Drop",vw:89,bg:"linear-gradient(135deg,#CFEA5A,#A8E635)",e:"👟"},
+ {n:"Luxury Auntie",t:"Handbags",vw:203,bg:"linear-gradient(135deg,#FFD700,#FFA500)",e:"👜"}
+];
+if(!window.storage){
+ window.storage={
+  get:async(k)=>{const v=localStorage.getItem(k);return v?{value:v}:null},
+  set:async(k,v)=>localStorage.setItem(k,v)
+ }
+}
+function App(){
+ const [ready,setReady]=useState(false);
+ const [used,setUsed]=useState(0);
+ const [earn,setEarn]=useState(0);
+ const [view,setView]=useState("browse");
+ const [list,setList]=useState(SEED);
+ const [cat,setCat]=useState("All");
+ const [q,setQ]=useState("");
+ const [sel,setSel]=useState(null);
+ const [showF,setShowF]=useState(false);
+ const [pr,setPr]=useState([0,200000]);
+ const [szF,setSzF]=useState("All");
+ const [authF,setAuthF]=useState(false);
+ const [cam,setCam]=useState(null);
+ const fileRef=useRef(null);
+
+ useEffect(()=>{
+  (async()=>{
+   try{const u=await window.storage.get("usage:"+todayKey()); if(u) setUsed(JSON.parse(u.value));}catch{}
+   try{const e=await window.storage.get("fees-total"); if(e) setEarn(JSON.parse(e.value));}catch{}
+   setReady(true);
+  })();
+ },[]);
+
+ const record=useCallback(async(isFeat)=>{
+  const nu=used+1;
+  const fee=isFeat?FEAT:(nu>FREE?FEE:0);
+  setUsed(nu);
+  await window.storage.set("usage:"+todayKey(), JSON.stringify(nu));
+  if(fee>0){
+   const ne=earn+fee;
+   setEarn(ne);
+   await window.storage.set("fees-total", JSON.stringify(ne));
+  }
+  return fee;
+ },[used,earn]);
+
+ const handleCam=(e)=>{
+  const f=e.target.files[0];
+  if(!f) return;
+  setCam({name:f.name, url:URL.createObjectURL(f)});
+ };
+
+ let filt=list.filter(l=>{
+  const mC=cat==="All"||l.c===cat;
+  const mQ=l.t.toLowerCase().includes(q.toLowerCase());
+  const mP=l.p>=pr[0]&&l.p<=pr[1];
+  const mS=szF==="All"||l.sz===szF;
+  const mA=!authF||l.auth;
+  return mC&&mQ&&mP&&mS&&mA;
+ }).sort((a,b)=>(b.f?1:0)-(a.f?1:0));
+
+ if(!ready) return <div style={{padding:40}}>Loading Myende...</div>;
+   return(
+  <div style={{background:"#FFF7ED",minHeight:"100vh",fontFamily:"Inter,sans-serif"}}>
+   <div style={{background:"linear-gradient(135deg,#17151F,#2D1B4E)",color:"#fff",position:"sticky",top:0,zIndex:20,borderBottom:"4px solid #FF6B5B"}}>
+    <div style={{maxWidth:1100,margin:"0 auto",padding:"12px"}}>
+     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div style={{display:"flex",gap:8,alignItems:"center"}}>
+       <div style={{width:36,height:36,borderRadius:10,background:"linear-gradient(135deg,#FF6B5B,#CFEA5A)",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:"#000"}}>M</div>
+       <div>
+        <div style={{fontFamily:"Fraunces",fontSize:20,fontWeight:900}}>MYENDE MARKET</div>
+        <div style={{fontSize:9,color:"#CFEA5A"}}>eBay for KZN - Camera - Live</div>
+       </div>
+      </div>
+      <div style={{display:"flex",gap:6}}>
+       <button onClick={()=>setView("browse")} style={btn(view==="browse")}>Browse</button>
+       <button onClick={()=>setView("sell")} style={{...btn(view==="sell"),background:"#CFEA5A",color:"#000"}}>+ Sell</button>
+       <button onClick={()=>setView("dashboard")} style={btn(view==="dashboard")}>R{earn}</button>
+      </div>
+     </div>
+     <div style={{marginTop:10,display:"flex",gap:6,background:"#fff",borderRadius:12,padding:5,border:"2px solid #FF6B5B"}}>
+      <div style={{flex:1,display:"flex",alignItems:"center",gap:6,padding:"0 8px"}}>🔍
+       <input value={q} onChange={e=>{setQ(e.target.value);setCam(null)}} placeholder="Search iPhone, Jordan" style={{flex:1,border:"none",outline:"none",fontSize:14}}/>
+      </div>
+      <button onClick={()=>fileRef.current?.click()} style={{background:cam?"#FF6B5B":"linear-gradient(135deg,#7EC8E3,#A7E3F2)",border:"none",borderRadius:8,padding:"6px 10px",fontWeight:700,fontSize:12}}>📷 Camera</button>
+      <button onClick={()=>setShowF(!showF)} style={{background:showF?"#000":"#eee",color:showF?"#fff":"#000",border:"none",borderRadius:8,padding:"6px 10px",fontSize:12}}>⚙️ Filters</button>
+      <input ref={fileRef} type="file" accept="image/*" onChange={handleCam} style={{display:"none"}}/>
+     </div>
+     {cam && (
+      <div style={{marginTop:8,background:"linear-gradient(135deg,#CFEA5A,#E0FF7A)",borderRadius:8,padding:8,display:"flex",gap:8,alignItems:"center",color:"#000",fontSize:12}}>
+       <img src={cam.url} style={{width:40,height:40,borderRadius:6}}/>
+       <div><b>Camera:</b> {cam.name}</div>
+       <button onClick={()=>{setCam(null);setQ("")}} style={{marginLeft:"auto",background:"#000",color:"#fff",border:"none",borderRadius:6,padding:"4px 8px"}}>X</button>
+      </div>
+     )}
+     {showF && (
+      <div style={{marginTop:8,background:"#fff",borderRadius:10,padding:10,color:"#000",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}}>
+       <div><b>Price</b><br/>R{pr[0]} - {pr[1]}<br/><input type="range" min="0" max="200000" value={pr[1]} onChange={e=>setPr([pr[0],parseInt(e.target.value)])} style={{width:"100%"}}/></div>
+       <div><b>Size</b><br/><select value={szF} onChange={e=>setSzF(e.target.value)} style={{width:"100%"}}><option>All</option><option>6</option><option>7</option><option>8</option><option>M</option><option>L</option></select></div>
+       <div><b>Auth</b><br/><label><input type="checkbox" checked={authF} onChange={e=>setAuthF(e.target.checked)}/> Only Auth</label></div>
+      </div>
+     )}
+    </div>
+   </div>
+
+   <div style={{maxWidth:1100,margin:"0 auto",padding:"12px"}}>
+    <div style={{background:"linear-gradient(135deg,#FF6B5B,#FF8E53)",borderRadius:10,padding:"8px 12px",color:"#fff",display:"flex",justifyContent:"space-between",fontSize:12,fontWeight:600,marginBottom:10}}>
+     <span>{used>=FREE? "Free used! Next R"+FEE : (FREE-used)+" FREE left"}</span>
+     <span>R{earn} earned</span>
+    </div>    {view==="browse" && (<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:10}}>{filt.map(it=>(<div key={it.id} onClick={()=>setSel(it)} style={{background:"#fff",borderRadius:14,overflow:"hidden",cursor:"pointer",border:it.f?"2px solid #FFD700":"1px solid #f0e6d3",position:"relative"}}>{it.f? <div style={{position:"absolute",top:6,left:6,background:"#FFD700",color:"#000",fontSize:8,fontWeight:900,padding:"3px 6px",borderRadius:10}}>FEAT</div> : null}{it.auth? <div style={{position:"absolute",top:6,right:6,background:"#000",color:"#CFEA5A",fontSize:7,padding:"2px 5px",borderRadius:8}}>AUTH</div> : null}<div style={{height:110,background:it.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:46}}>{it.e}</div><div style={{padding:8}}><div style={{fontSize:9,color:"#888"}}>{it.c} - {it.sz}</div><div style={{fontWeight:700,fontSize:12}}>{it.t}</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4}}><div style={{fontFamily:"Fraunces",fontWeight:900,fontSize:14}}>R{it.p.toLocaleString()}</div><div style={{background:"#17151F",color:"#CFEA5A",fontSize:9,padding:"3px 6px",borderRadius:8}}>Buy</div></div></div></div>))}</div>)}
+    {view==="sell" && <SellForm onRecord={record} list={list} setList={setList} admin={ADMIN}/>}
+    {view==="dashboard" && (<div style={{maxWidth:480,margin:"0 auto"}}><h2 style={{fontFamily:"Fraunces"}}>R{earn} Earned</h2><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}><Box l="Free Used" v={used+"/"+FREE} bg="linear-gradient(135deg,#7EC8E3,#A7E3F2)"/><Box l="Earned" v={"R"+earn} bg="linear-gradient(135deg,#CFEA5A,#A8E635)"/><Box l="Featured" v={"R"+FEAT} bg="linear-gradient(135deg,#FFD700,#FFA500)"/><Box l="Listings" v={list.length} bg="linear-gradient(135deg,#FF6B5B,#FF8E53)"/></div></div>)}
+   </div>
+   {sel && (<div onClick={()=>setSel(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",display:"flex",alignItems:"center",justifyContent:"center",padding:14,zIndex:99}}><div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:16,overflow:"hidden",maxWidth:360,width:"100%"}}><div style={{height:140,background:sel.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:60}}>{sel.e}</div><div style={{padding:14}}><div style={{fontSize:10,color:"#888"}}>{sel.c} - {sel.sz}</div><div style={{fontFamily:"Fraunces",fontSize:18,fontWeight:900}}>{sel.t}</div><div style={{fontFamily:"Fraunces",fontSize:24,fontWeight:900,marginTop:10}}>R{sel.p.toLocaleString()}</div><button onClick={()=>{const m=encodeURIComponent("Hi! I want "+sel.t+" for R"+sel.p); window.open("https://wa.me/"+ADMIN+"?text="+m)}} style={{width:"100%",padding:12,borderRadius:10,border:"none",background:"linear-gradient(135deg,#25D366,#128C7E)",color:"#fff",fontWeight:900,marginTop:10}}>Buy on WhatsApp</button><button onClick={()=>setSel(null)} style={{width:"100%",padding:8,borderRadius:8,background:"#f5f5f5",border:"1px solid #eee",color:"#888",marginTop:6}}>Close</button></div></div></div>)}
+  </div>
+ );
+}
+function SellForm({onRecord,list,setList,admin}){
+ const [t,setT]=useState(""); const [p,setP]=useState(""); const [c,setC]=useState("Electronics"); const [sz,setSz]=useState("M"); const [auth,setAuth]=useState(false); const [feat,setFeat]=useState(false);
+ const submit=async(e)=>{
+  e.preventDefault(); if(!t||!p) return alert("Add title and price"); const fee=await onRecord(feat); const cat=CATS.find(x=>x.id===c)||CATS[1]; const ni={id:Date.now().toString(),t,p:parseFloat(p),c,s:"you",bg:cat.bg,e:cat.e,sz,auth:auth?1:0,v:0,f:feat?1:0}; setList([ni,...list]);
+  if(fee>0){const m=encodeURIComponent("Hi Admin! I listed "+t+" for R"+p+". I owe R"+fee); window.open("https://wa.me/"+admin+"?text="+m,"_blank");} alert(fee>0? "Listed! Owe R"+fee : "Listed FREE!"); setT(""); setP("");
+ };
+ return(<div style={{maxWidth:460,margin:"0 auto",background:"#fff",borderRadius:14,padding:16,border:"2px solid #FFE4B5"}}><h2 style={{fontFamily:"Fraunces",fontSize:18}}>List Item</h2><form onSubmit={submit} style={{display:"flex",flexDirection:"column",gap:8}}><input placeholder="What selling? e.g. Jordan 4" value={t} onChange={e=>setT(e.target.value)} style={inp}/><input placeholder="Price Rands" type="number" value={p} onChange={e=>setP(e.target.value)} style={inp}/><div style={{display:"flex",gap:6}}><select value={c} onChange={e=>setC(e.target.value)} style={{...inp,flex:1}}>{CATS.slice(1).map(x=><option key={x.id} value={x.id}>{x.e} {x.l}</option>)}</select><select value={sz} onChange={e=>setSz(e.target.value)} style={{...inp,width:80}}><option>6</option><option>7</option><option>8</option><option>M</option><option>L</option></select></div><label style={{display:"flex",gap:6,fontSize:12,background:"#f9f9f9",padding:8,borderRadius:8}}><input type="checkbox" checked={auth} onChange={e=>setAuth(e.target.checked)}/> Authentic</label><label style={{display:"flex",gap:6,fontSize:12,background:"#f9f9f9",padding:8,borderRadius:8}}><input type="checkbox" checked={feat} onChange={e=>setFeat(e.target.checked)}/> FEATURED R30</label><button type="submit" style={{padding:12,borderRadius:10,border:"none",background:"linear-gradient(135deg,#FF6B5B,#FF8E53)",color:"#fff",fontWeight:900}}>Post Item</button></form></div>);
+}
+const btn=(a)=>({padding:"6px 12px",borderRadius:18,border:"none",background:a?"#FF6B5B":"#fff",color:a?"#fff":"#17151F",fontSize:12,fontWeight:700});
+const inp={padding:"10px",borderRadius:8,border:"1px solid #E5D5C0",background:"#FFF",fontSize:13};
+const Box=({l,v,bg})=><div style={{background:bg,borderRadius:12,padding:12}}><div style={{fontSize:10,fontWeight:700,opacity:0.7}}>{l}</div><div style={{fontFamily:"Fraunces",fontSize:18,fontWeight:900}}>{v}</div></div>;
+const root=ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App/>);
+</script>
+</body>
+</html>
