@@ -1,63 +1,41 @@
-let filter='all', activeBidId=null, timerInterval=null;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYENDE MARKET - eBay Style</title>
+<style>
+body{margin:0;font-family:Arial;background:#050a08;color:#fff}
+header{background:rgba(0,0,0,0.8);padding:15px 4%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.logo{font-weight:800;font-size:1.5rem}
+.search{flex:1;max-width:500px;margin:0 20px;display:flex}
+.search input{flex:1;padding:12px;border-radius:30px 0 0 30px;border:none}
+.search button{padding:12px 20px;border-radius:0 30px 30px 0;border:none;background:#d4a017;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;padding:20px}
+.card{background:#111;border:1px solid #333;border-radius:15px;padding:15px}
+.btn{padding:10px 20px;border-radius:20px;border:none;background:#fff;color:#000;font-weight:bold;cursor:pointer}
+.btn-gold{background:#d4a017}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">🛍️ MYENDE MARKET</div>
+<div class="search"><input id="search" placeholder="Search anything..." oninput="render()"><button onclick="render()">Search</button></div>
+<button class="btn btn-gold" onclick="openSell()">+ Sell</button>
+</header>
+<div style="padding:30px 4%;text-align:center"><h1>Everything - Auction & Buy Now</h1><p>eBay style for SA - Bid or Buy Instantly</p></div>
+<div class="grid" id="grid"></div>
 
-function save(){localStorage.setItem('ntuthuko_market',JSON.stringify(products))}
-function togglePrice(){let t=document.getElementById('pType').value;document.getElementById('fixedBox').style.display=t=='fixed'?'block':'none';document.getElementById('auctionBox').style.display=t=='auction'?'block':'none'}
-function openSell(){document.getElementById('sellModal').style.display='flex'}
-function closeModals(){document.getElementById('sellModal').style.display='none';document.getElementById('bidModal').style.display='none';clearInterval(timerInterval);activeBidId=null}
-function filterTab(f,el){filter=f;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');render()}
+<div id="sellBox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);place-items:center;z-index:99"><div style="background:#111;padding:20px;border-radius:15px;max-width:400px;width:90%"><h3>List Item</h3><input id="pTitle" placeholder="Title" style="width:100%;padding:10px;margin:5px 0"><input id="pPrice" type="number" placeholder="Price R" style="width:100%;padding:10px;margin:5px 0"><input id="pPhone" placeholder="WhatsApp number" style="width:100%;padding:10px;margin:5px 0"><button class="btn btn-gold" onclick="addProduct()" style="width:100%;margin-top:10px">List Now</button><button class="btn" onclick="document.getElementById('sellBox').style.display='none'" style="width:100%;margin-top:5px">Cancel</button></div></div>
 
-function addProduct(){
-let title=document.getElementById('pTitle').value, vendor=document.getElementById('vName').value||'Anonymous Vendor', phone=document.getElementById('vPhone').value.replace(/\D/g,''), type=document.getElementById('pType').value;
-if(!title||!phone)return alert('Add title & phone');
-let p={id:Date.now(),title,vendor,phone,desc:document.getElementById('pDesc').value,emoji:type=='auction'?'🔥':'📦',type,bids:[]};
-if(type=='fixed'){p.price=parseFloat(document.getElementById('pPrice').value)||0;if(!p.price)return alert('Add price')}
-else{p.startPrice=parseFloat(document.getElementById('pStart').value)||0;p.price=p.startPrice;p.reserve=parseFloat(document.getElementById('pReserve').value)||0;p.endTime=Date.now()+parseFloat(document.getElementById('pDuration').value)*3600000;p.current=p.startPrice}
-products.unshift(p);save();render();closeModals();alert('Listed! You will get 90% after 10% platform fee. Share marketplace.html');
-}
-
-function render(){
-let grid=document.getElementById('grid');grid.innerHTML='';
-let list=products.filter(p=>{if(filter=='all')return true;if(filter=='fixed')return p.type=='fixed';if(filter=='auction')return p.type=='auction';if(filter=='my')return p.phone.includes('813474435');});
-list.forEach(p=>{
-let isAuction=p.type=='auction';let current=isAuction?(p.current||p.startPrice):p.price;
-let timeLeft=isAuction?Math.max(0,p.endTime-Date.now()):0;
-let timeStr=isAuction?formatTime(timeLeft):'';
-let html=`<div class="card"><div class="card-img">${p.emoji}</div><div class="card-body"><span class="vendor">${p.vendor} ${isAuction?'• AUCTION':''}</span><div class="title">${p.title}</div><div class="price">R${current} ${isAuction?'<span style="font-size:11px;color:#666">(Current Bid)</span>':''}</div>${isAuction?`<div class="auction-info"><span class="timer">${timeStr||'ENDED'}</span><br>${p.bids.length} bids ${p.reserve?'• Reserve R'+p.reserve:''}</div>`: `<div style="font-size:12px;color:#666">${p.desc.slice(0,60)}</div>`}<div class="actions">${isAuction?`<button class="btn btn-red" onclick="openBid(${p.id})">BID NOW</button>`: `<a class="btn" href="https://wa.me/${p.phone}?text=Hi%20${encodeURIComponent(p.vendor)}%20I%20want%20${encodeURIComponent(p.title)}%20R${current}" target="_blank">Buy Now</a>`}<button class="btn btn-black" onclick="openBid(${p.id})">Details</button></div></div></div>`;
-grid.innerHTML+=html;
-});
-}
-
-function formatTime(ms){if(ms<=0)return'ENDED';let s=Math.floor(ms/1000);let h=Math.floor(s/3600);let m=Math.floor((s%3600)/60);let sec=s%60;return`${h}h ${m}m ${sec}s`}
-
-function openBid(id){
-let p=products.find(x=>x.id==id);if(!p)return;activeBidId=id;
-document.getElementById('bidTitle').innerText=p.title;
-document.getElementById('bidCurrent').innerText='R'+(p.type=='auction'?(p.current||p.startPrice):p.price);
-document.getElementById('bidWhatsApp').href=`https://wa.me/${p.phone}?text=Hi%20I%20am%20interested%20in%20${encodeURIComponent(p.title)}`;
-document.getElementById('bidReserveNote').innerText=p.reserve?`Reserve: R${p.reserve} ${p.current>=p.reserve?'✅ Met':'❌ Not met yet'}`:'No reserve';
-let hist=document.getElementById('bidHistory');hist.innerHTML=p.bids.slice(-10).reverse().map(b=>`R${b.amount} - ${b.user} - ${new Date(b.time).toLocaleTimeString()}`).join('<br>')||'No bids yet';
-document.getElementById('bidModal').style.display='flex';
-if(p.type=='auction'){
-clearInterval(timerInterval);
-timerInterval=setInterval(()=>{
-let pp=products.find(x=>x.id==id);if(!pp)return;let left=pp.endTime-Date.now();
-document.getElementById('bidTimer').innerText=formatTime(left);
-if(left<=0){clearInterval(timerInterval);document.getElementById('bidTimer').innerText='AUCTION ENDED - Winner: '+(pp.bids[pp.bids.length-1]?.user||'No bids');}
-},1000);
-}else{document.getElementById('bidTimer').innerText='Fixed Price - Buy anytime'}
-}
-
-function placeBid(){
-if(!activeBidId)return;let p=products.find(x=>x.id==activeBidId);if(p.type!='fixed' && Date.now()>p.endTime)return alert('Auction ended');
-let amt=parseFloat(document.getElementById('bidAmount').value);if(!amt)return alert('Enter bid');
-let min=(p.current||p.startPrice||0)+10;if(amt<min)return alert('Bid must be at least R'+min);
-p.bids.push({user:'You (081***4435)',amount:amt,time:Date.now()});p.current=amt;
-// Anti-sniping: extend 5 mins if bid in last 5 mins
-if(p.endTime-Date.now()<5*60*1000){p.endTime+=5*60*1000;alert('Anti-sniping: Auction extended +5 mins!')}
-save();openBid(activeBidId);render();
-}
-
-render(); setInterval(render, 10000);
+<script>
+let products=JSON.parse(localStorage.getItem('myende')||'[]');
+if(products.length==0){products=[{id:1,title:'iPhone 13 - Boxed',price:8500,phone:'27123456789',emoji:'📱'},{id:2,title:'Jordan Shoes Size 8',price:2500,phone:'27123456789',emoji:'👟'},{id:3,title:'Toyota Corolla 2019',price:165000,phone:'27123456789',emoji:'🚗'}];localStorage.setItem('myende',JSON.stringify(products))}
+function render(){let g=document.getElementById('grid');g.innerHTML='';let s=document.getElementById('search').value.toLowerCase();products.filter(p=>p.title.toLowerCase().includes(s)).forEach(p=>{g.innerHTML+=`<div class="card"><div style="font-size:3rem;text-align:center">${p.emoji}</div><h3>${p.title}</h3><p style="font-size:1.2rem;font-weight:bold;margin:10px 0">R${p.price}</p><button class="btn btn-gold" style="width:100%" onclick="buy(${p.id})">Buy on WhatsApp</button></div>`})}
+function openSell(){document.getElementById('sellBox').style.display='grid'}
+function addProduct(){let t=document.getElementById('pTitle').value;let pr=document.getElementById('pPrice').value;let ph=document.getElementById('pPhone').value;if(!t||!pr)return alert('Fill all');products.unshift({id:Date.now(),title:t,price:parseFloat(pr),phone:ph,emoji:'📦'});localStorage.setItem('myende',JSON.stringify(products));document.getElementById('sellBox').style.display='none';render()}
+function buy(id){let p=products.find(x=>x.id==id);window.open(`https://wa.me/${p.phone}?text=Hi! I want ${p.title} for R${p.price} from MYENDE MARKET`)}
+render();
 </script>
 </body>
 </html>
