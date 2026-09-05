@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Myende Market - Colorful</title>
+<style>
+body{margin:0;background:#FFF7ED;font-family:sans-serif}
+.header{background:linear-gradient(135deg,#17151F,#2D1B4E);color:#fff;padding:12px;border-bottom:4px solid #FF6B5B}
+.logo{width:36px;height:36px;border-radius:10;background:linear-gradient(135deg,#FF6B5B,#CFEA5A);display:flex;align-items:center;justify-content:center;font-weight:900;color:#000}
+.chip{padding:8px 12px;border-radius:18px;border:none;font-weight:700;font-size:12px;cursor:pointer}
+.card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid #f0e6d3}
+.banner{background:linear-gradient(135deg,#FF6B5B,#FF8E53);color:#fff;padding:8px 12px;border-radius:10px;display:flex;justify-content:space-between;font-weight:600;margin:10px 0}
+.live-card{min-width:150px;border-radius:12px;padding:10px;color:#000}
+</style>
+</head>
+<body>
+<div class="header">
+<div style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto">
+<div style="display:flex;gap:8px;align-items:center">
+<div class="logo">M</div>
+<div><div style="font-size:20px;font-weight:900">MYENDE MARKET</div><div style="font-size:9px;color:#CFEA5A">eBay for KZN - Camera - Live</div></div>
+</div>
+<div style="display:flex;gap:6px">
+<button class="chip" style="background:#FF6B5B;color:#fff">Browse</button>
+<button class="chip" style="background:#CFEA5A;color:#000">+ Sell</button>
+<button class="chip" style="background:#fff;color:#000">R0</button>
+</div>
+</div>
+<div style="max-width:1100px;margin:10px auto 0;background:#fff;border-radius:12px;padding:5px;border:2px solid #FF6B5B;display:flex;gap:6px">
+<div style="flex:1;display:flex;align-items:center;gap:6px;padding:0 8px">🔍<input id="search" placeholder="Search iPhone, Jordan" style="flex:1;border:none;outline:none;font-size:14px" oninput="doSearch(this.value)"></div>
+<button onclick="document.getElementById('cam').click()" style="background:linear-gradient(135deg,#7EC8E3,#A7E3F2);border:none;border-radius:8px;padding:6px 10px;font-weight:700">📷 Camera</button>
+<button onclick="toggleFilters()" style="background:#eee;border:none;border-radius:8px;padding:6px 10px">⚙️ Filters</button>
+<input id="cam" type="file" accept="image/*" style="display:none" onchange="handleCam(this)">
+</div>
+<div id="camInfo" style="display:none;max-width:1100px;margin:8px auto 0;background:linear-gradient(135deg,#CFEA5A,#E0FF7A);border-radius:8px;padding:8px;font-size:12px">📸 Camera photo: <span id="camName"></span> <button onclick="clearCam()" style="float:right;background:#000;color:#fff;border:none;border-radius:6px;padding:4px 8px">X</button></div>
+</div>
+<div style="max-width:1100px;margin:0 auto;padding:12px">
+<div class="banner"><span>✅ 3 FREE left</span><span>💰 R0 earned</span></div>
+<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px">
+<button class="chip" style="background:#fff" onclick="filterCat('All')">✨ All</button>
+<button class="chip" style="background:linear-gradient(135deg,#FF6B5B,#FF8E53)" onclick="filterCat('Electronics')">📱 Phones</button>
+<button class="chip" style="background:linear-gradient(135deg,#CFEA5A,#A8E635)" onclick="filterCat('Sneakers')">👟 Drip</button>
+<button class="chip" style="background:linear-gradient(135deg,#7EC8E3,#A7E3F2)" onclick="filterCat('Vehicles')">🚗 Cars</button>
+<button class="chip" style="background:linear-gradient(135deg,#FFD700,#FFA500)" onclick="filterCat('Fashion')">👜 Fashion</button>
+</div>
+<div style="margin:12px 0">
+<div style="display:flex;justify-content:space-between"><h3 style="margin:0;font-size:16px">🔴 Myende Live</h3><span style="font-size:10px;background:#FF6B5B;color:#fff;padding:3px 8px;border-radius:12px">LIVE NOW</span></div>
+<div style="display:flex;gap:8px;overflow-x:auto;margin-top:6px">
+<div class="live-card" style="background:linear-gradient(135deg,#FF6B5B,#FF8E53)"><div style="background:red;color:#fff;font-size:9px;padding:2px 6px;border-radius:8px;display:inline-block">● LIVE 124</div><div style="font-size:24px">📱</div><div style="font-weight:800">Thuthuko Live</div><div style="font-size:10px">Phones & Tech</div><button style="margin-top:6px;background:#000;color:#fff;border:none;border-radius:6px;padding:4px 8px;width:100%">Watch</button></div>
+<div class="live-card" style="background:linear-gradient(135deg,#CFEA5A,#A8E635)"><div style="background:red;color:#fff;font-size:9px;padding:2px 6px;border-radius:8px;display:inline-block">● LIVE 89</div><div style="font-size:24px">👟</div><div style="font-weight:800">KZN Drip Plug</div><div style="font-size:10px">Sneakers Drop</div><button style="margin-top:6px;background:#000;color:#fff;border:none;border-radius:6px;padding:4px 8px;width:100%">Watch</button></div>
+<div class="live-card" style="background:linear-gradient(135deg,#FFD700,#FFA500)"><div style="background:red;color:#fff;font-size:9px;padding:2px 6px;border-radius:8px;display:inline-block">● LIVE 203</div><div style="font-size:24px">👜</div><div style="font-weight:800">Luxury Auntie</div><div style="font-size:10px">Handbags</div><button style="margin-top:6px;background:#000;color:#fff;border:none;border-radius:6px;padding:4px 8px;width:100%">Watch</button></div>
+</div>
+</div>
+<div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px"></div>
+</div>
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:14px;z-index:99" onclick="this.style.display='none'">
+<div id="modalContent" style="background:#fff;border-radius:16px;overflow:hidden;max-width:360px;width:100%" onclick="event.stopPropagation()"></div>
+</div>
+<script>
+const ADMIN="27813474435";
+const ITEMS=[
+{id:1,t:"iPhone 15 Pro Max 256GB",p:18500,c:"Electronics",bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)",e:"📱",sz:"256GB",auth:1,feat:1},
+{id:2,t:"Jordan 4 Retro Black",p:3200,c:"Sneakers",bg:"linear-gradient(135deg,#CFEA5A,#A8E635)",e:"👟",sz:"9",auth:1,feat:1},
+{id:3,t:"Toyota Corolla 2019",p:185000,c:"Vehicles",bg:"linear-gradient(135deg,#7EC8E3,#A7E3F2)",e:"🚗",sz:"2019",auth:0,feat:0},
+{id:4,t:"Louis Vuitton Bag",p:12500,c:"Fashion",bg:"linear-gradient(135deg,#FFD700,#FFA500)",e:"👜",sz:"M",auth:1,feat:1},
+{id:5,t:"Samsung S24 Ultra",p:16500,c:"Electronics",bg:"linear-gradient(135deg,#FF6B5B,#FF8E53)",e:"📱",sz:"512GB",auth:1,feat:0},
+{id:6,t:"Nike Dunk Low",p:2800,c:"Sneakers",bg:"linear-gradient(135deg,#CFEA5A,#A8E635)",e:"👟",sz:"8",auth:1,feat:0}
+];
+let currentCat="All";let currentQ="";
+function render(list){const g=document.getElementById('grid');g.innerHTML=list.map(it=>`<div class="card" onclick="openItem(${it.id})" style="${it.feat?'border:2px solid #FFD700':''};position:relative;cursor:pointer">${it.feat?'<div style="position:absolute;top:6px;left:6px;background:#FFD700;color:#000;font-size:8px;font-weight:900;padding:3px 6px;border-radius:10px">⭐ FEAT</div>':''}${it.auth?'<div style="position:absolute;top:6px;right:6px;background:#000;color:#CFEA5A;font-size:7px;padding:2px 5px;border-radius:8px">✓ AUTH</div>':''}<div style="height:110px;background:${it.bg};display:flex;align-items:center;justify-content:center;font-size:46px">${it.e}</div><div style="padding:8px"><div style="font-size:9px;color:#888">${it.c} • ${it.sz}</div><div style="font-weight:700;font-size:12px">${it.t}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><div style="font-weight:900;font-size:14px">R${it.p.toLocaleString()}</div><div style="background:#17151F;color:#CFEA5A;font-size:9px;padding:3px 6px;border-radius:8px">Buy</div></div></div></div>`).join('');}
+function filterCat(cat){currentCat=cat;apply();}
+function doSearch(q){currentQ=q.toLowerCase();apply();}
+function apply(){let f=ITEMS.filter(l=>{const mC=currentCat==="All"||l.c===currentCat;const mQ=l.t.toLowerCase().includes(currentQ);return mC&&mQ;});render(f);}
+function openItem(id){const it=ITEMS.find(x=>x.id===id);document.getElementById('modalContent').innerHTML=`<div style="height:140px;background:${it.bg};display:flex;align-items:center;justify-content:center;font-size:60px">${it.e}</div><div style="padding:14px"><div style="font-size:10px;color:#888">${it.c} • ${it.sz}</div><div style="font-size:18px;font-weight:900">${it.t}</div><div style="font-size:24px;font-weight:900;margin-top:10px">R${it.p.toLocaleString()}</div><button onclick="buyWhatsApp('${it.t}',${it.p})" style="width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:900;margin-top:10px">💬 Buy on WhatsApp</button><button onclick="document.getElementById('modal').style.display='none'" style="width:100%;padding:8px;border-radius:8px;background:#f5f5f5;border:1px solid #eee;color:#888;margin-top:6px">Close</button></div>`;document.getElementById('modal').style.display='flex';}
+function buyWhatsApp(t,p){const m=encodeURIComponent("Hi! I want "+t+" for R"+p);window.open("https://wa.me/"+ADMIN+"?text="+m);}
+function handleCam(inp){const f=inp.files[0];if(!f) return;document.getElementById('camName').textContent=f.name;document.getElementById('camInfo').style.display='block';doSearch(f.name.split('.')[0].slice(0,8));}
+function clearCam(){document.getElementById('camInfo').style.display='none';document.getElementById('search').value='';doSearch('');}
+function toggleFilters(){alert('Filters: Price, Size, AUTH - coming in V2!');}
+render(ITEMS);
+</script>
+</body>
+</html>
