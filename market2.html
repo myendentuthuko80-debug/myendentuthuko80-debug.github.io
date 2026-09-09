@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SHESHA PLUG SUPER APP</title>
-<style>
-:root{--bg:#f8f9fa;--card:#fff;--text:#111;--accent:#ff6a00;--lime:#7ed321}
-[data-theme="dark"]{--bg:#111;--card:#222;--text:#fff}
-[data-theme="blue"]{--bg:#001a33;--card:#002244;--text:#aaddff;--accent:#00d4ff}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:var(--bg);color:var(--text);padding-bottom:80px}
-.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,var(--accent),var(--lime));padding:12px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:18px;color:#fff}
-.btn{padding:8px 12px;border-radius:20px;border:none;font-weight:700}
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SHESHA PLUG ⚡</title><style>
+body{margin:0;font-family:Arial;background:#f5f5f5;padding-bottom:80px}
+.h{position:sticky;top:0;z-index:9;background:linear-gradient(90deg,#ff6a00,#7ed321);padding:12px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;color:white;font-size:18px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
-.card{background:var(--card);border-radius:16px;padding:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);position:relative}
-.card img{width:100%;height:130px;object-fit:cover;border-radius:12px}
-.badge{position:absolute;top:12px;left:12px;font-size:9px;background:#111;color:var(--lime);padding:3px 7px;border-radius:20px}
-.trending{position:absolute;top:12px;right:12px;font-size:9px;padding:3px 7px;border-radius:20px;font-weight:900}
-.trend-high{background:red;color:white} .trend-mid{background:orange;color:white} .trend-slow{background:gray;color:white}
-.nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #ddd;z-index:200}
-.settings{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:300;padding:20px;display:none;overflow-y:auto}
-.chat-box{position:fixed;bottom:80px;right:10px;width:300px;height:380px;background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.3);display:none;flex-direction:column;z-index:250}
-#reels{height:100vh;overflow-y:scroll;display:none}
-.reel{height:100vh;position:relative;background:#000;color:white;display:flex;flex-direction:column;justify-content:flex-end;padding:20px}
+.card{background:white;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.card img{width:100%;height:120px;object-fit:cover;border-radius:8px;background:#eee}
+.price{color:#ff6a00;font-weight:900}
+.btn{width:100%;padding:8px;border:none;border-radius:20px;font-weight:700;margin-top:5px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #ddd}
+#reels{display:none;height:100vh;background:black;color:white;padding:20px}
+.settings{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:white;z-index:99;padding:20px}
 </style></head><body>
-<div class="header"><div class="logo">SHESHA PLUG ⚡</div><div style="display:flex;gap:6px"><select id="lang" style="border-radius:20px;padding:5px"><option>EN</option><option>ZU</option><option>XH</option><option>AF</option></select><button class="btn" style="background:white" onclick="toggleSettings()">⚙️</button><button id="loginBtn" class="btn" style="background:black;color:white" onclick="toggleLogin()">LOGIN</button></div></div>
-<div style="padding:10px;display:flex;gap:6px;overflow-x:auto"><button class="btn" style="background:var(--accent);color:white" onclick="filterTrend('all')">All</button><button class="btn" onclick="filterTrend('trending')">🔥 Fast
+<div class="h"><div class="logo">SHESHA PLUG ⚡</div><div><select style="border-radius:20px;padding:5px"><option>EN</option><option>ZU</option></select> <button onclick="document.getElementById('settings').style.display='block'" style="border-radius:20px;padding:6px 12px;border:none">⚙️</button> <button id="lb" onclick="login()" style="background:black;color:white;border-radius:20px;padding:6px 12px;border:none">LOGIN</button></div></div>
+<div style="padding:10px;display:flex;gap:6px"><button onclick="showAll()" style="background:#ff6a00;color:white;border:none;padding:8px 14px;border-radius:20px;font-weight:700">All</button><button onclick="showFast()" style="background:white;border:1px solid #ddd;padding:8px 14px;border-radius:20px">🔥 Fast</button><button onclick="showSlow()" style="background:white;border:1px solid #ddd;padding:8px 14px;border-radius:20px">🐢 Slow</button><button onclick="showReels()" style="background:white;border:1px solid #ddd;padding:8px 14px;border-radius:20px">🎬 Reels</button></div>
+<div class="grid" id="g"></div>
+<div id="reels"><h2>🔴 LIVE - @DripLord_DBN - 234 watching</h2><br><p>JORDAN 4 LEGIT CHECK LIVE!</p><br><button onclick="alert('Video Call Connected! 📹')" style="background:#7ed321;padding:10px 20px;border:none;border-radius:20px;font-weight:700">💬 Join + Video Call</button><br><br><div>Watched: <span id="rc">0</span>/10 = FREE PASS ⚡</div><br><button onclick="showHome()" style="background:white;color:black;padding:10px 20px;border-radius:20px">Back to Home</button></div>
+<div class="settings" id="settings"><h2>⚙️ Settings</h2><br><p>Theme:</p><button onclick="document.body.style.background='#111';document.body.style.color='white'">🌙 Dark Mode</button> <button onclick="document.body.style.background='#001a33';document.body.style.color='white'">💙 Blue Mode</button> <button onclick="document.body.style.background='#f5f5f5';document.body.style.color='black'">☀️ Light</button><br><br><p>Language: Any language</p><button>English</button> <button>isiZulu</button> <button>isiXhosa</button><br><br><div style="background:#f0f0f0;padding:12px;border-radius:12px"><div id="un">Guest</div><div>📦 Dropship: ON</div><div>🚚 Sell without holding stock: YES</div></div><br><button onclick="document.getElementById('settings').style.display='none'" style="background:black;color:white;padding:10px 20px;border-radius:20px">Close</button></div>
+<div class="nav"><div onclick="showHome()">🏠<br>Home</div><div onclick="showReels()">🎬<br>Reels</div><div onclick="alert('📦 DROPSHIP ON! You list, supplier ships direct! You keep 15% profit, no stock needed!')">📦<br>Drop</div><div onclick="alert('💬 Chat / 📞 Call / 📹 Video Call - WhatsApp style coming!')">💬<br>Chat</div><div onclick="document.getElementById('settings').style.display='block'">👤<br>Me</div></div>
+<script>
+var prods=[{n:"iPhone 15 Pro Max",p:18500,s:145,slow:false,d:true,i:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400"},{n:"Jordan 4 Retro",p:3200,s:98,slow:false,d:true,i:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"},{n:"Toyota Corolla 2021",p:185000,s:3,slow:true,d:false,i:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400"},{n:"LV Bag Original",p:12500,s:12,slow:true,d:true,i:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"},{n:"PS5 + 2 Pads",p:8500,s:67,slow:false,d:true,i:"https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400"},{n:"Samsung S24 Ultra",p:16500,s:2,slow:true,d:true,i:"https://images.unsplash.com/photo-1610945265064-0e34e03294b5?w=400"}];
+var watched=0;
+function render(list){var g=document.getElementById('g');g.innerHTML="";for(var i=0;i<list.length;i++){var x=list[i];var tag=x.s>50?"🔥 FAST "+x.s+" sold":x.s>10?"⚡ MID":"🐢 SLOW CHEAP!";var col=x.s>50?"red":x.s>10?"orange":"gray";g.innerHTML+="<div class=card><div style=font-size:9px;background:black;color:#7ed321;padding:3px 6px;border-radius:10px;display:inline-block>"+(x.d?"📦 DROPSHIP":"")+"</div><div style=float:right;background:"+col+";color:white;font-size:9px;padding:3px 6px;border-radius:10px>"+tag+"</div><img src="+x.i+" onerror=this.src='https://via.placeholder.com/400'><div style=font-weight:700;margin-top:6px>"+x.n+"</div><div class=price>R"+x.p+"</div><div style=font-size:10px>👁️ AI: You viewed phones - trending for you</div><button class=btn style=background:#111;color:white onclick=\"buy("+i+")\">🛒 Buy - Ship direct, no stock</button><button class=btn style=background:#7ed321;color:black onclick=\"alert('Chat Call Video coming!')\">💬 Chat / Call / Video</button></div>";}}
+function showAll(){document.getElementById('g').style.display='grid';document.getElementById('reels').style.display='none';render(prods);}
+function showFast(){render(prods.filter(function(a){return a.s>50}));}
+function showSlow(){render(prods.filter(function(a){return a.s<15}));}
+function showReels(){document.getElementById('g').style.display='none';document.getElementById('reels').style.display='block';watched++;document.getElementById('rc').innerHTML=watched;if(watched>=10)alert("🎉 FREE PASS! 1 hour free selling!");}
+function showHome(){document.getElementById('g').style.display='grid';document.getElementById('reels').style.display='none';}
+function buy(i){prods[i].s++;alert("✅ BOUGHT! Dropship: Supplier ships direct to customer. You profit R"+Math.round(prods[i].p*0.15)+" - You never hold product!");render(prods);}
+function login(){var u=prompt("Username to create account:");if(u){localStorage.setItem('user',u);document.getElementById('un').innerHTML=u;document.getElementById('lb').innerHTML=u;}}
+render(prods);
+</script></body></html>
