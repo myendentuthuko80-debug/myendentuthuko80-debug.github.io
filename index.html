@@ -1,43 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SHESHA PLUG ⚡ - KZN Marketplace</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
-body{background:#f8f9fa}
-.header{background:linear-gradient(135deg,#ff6a00,#7ed321);padding:16px;color:white;position:sticky;top:0;z-index:100}
-.logo{font-size:24px;font-weight:900;letter-spacing:-1px}
-.logo span{color:black;background:white;padding:2px 6px;border-radius:4px;margin-left:4px}
-.search{width:100%;padding:12px;border-radius:12px;border:none;margin-top:12px;font-size:16px}
-.banner{background:black;color:#7ed321;padding:10px;text-align:center;font-weight:bold;letter-spacing:1px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
-.card{background:white;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.card img{width:100%;height:120px;object-fit:cover;border-radius:12px}
-.price{color:#ff6a00;font-weight:900;font-size:18px;margin-top:6px}
-.badge{background:#111;color:#7ed321;font-size:10px;padding:2px 6px;border-radius:100px}
-.btn{width:100%;background:#111;color:white;border:none;padding:10px;border-radius:100px;margin-top:8px;font-weight:bold}
-</style>
-</head>
-<body>
-<div class="header">
-<div class="logo">SHESHA PLUG<span>⚡ MARKET</span></div>
-<div style="font-size:12px;margin-top:4px;opacity:0.9">Shesha! Thola! Dayisa! • eBay for KZN • 124 LIVE SELLERS</div>
-<input class="search" placeholder="🔍 Search phones, drip, cars...">
-</div>
-<div class="banner">⚡ AUTH VERIFIED • NO FAKE • CASH ON DELIVERY KZN ⚡</div>
-
-<div class="grid">
-<div class="card"><img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400"><div class="badge">📱 PHONES • AUTH</div><div>iPhone 15 Pro Max 256GB</div><div class="price">R18,500</div><button class="btn">💬 WhatsApp Buy</button></div>
-<div class="card"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"><div class="badge">👟 DRIP • LEGIT</div><div>Jordan 4 Retro Black Size 9</div><div class="price">R3,200</div><button class="btn">💬 WhatsApp Buy</button></div>
-<div class="card"><img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400"><div class="badge">🚗 CARS • VERIFIED</div><div>Toyota Corolla Quest 2021</div><div class="price">R185,000</div><button class="btn">💬 WhatsApp Buy</button></div>
-<div class="card"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"><div class="badge">👜 FASHION • AUTH</div><div>LV Bag - Original</div><div class="price">R12,500</div><button class="btn">💬 WhatsApp Buy</button></div>
-</div>
-
-<div style="text-align:center;padding:24px">
-<h2>SHESHA PLUG ⚡</h2>
-<p style="font-size:12px;opacity:0.6;margin-top:8px">KZN • GEN Z SOUTH AFRICA • eMatikwe • Est 2024</p>
-<a href="market2.html" style="display:inline-block;margin-top:12px;background:#ff6a00;color:white;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:bold">VIEW FULL MARKET →</a>
-</div>
-</body>
-</html>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SHESHA PLUG ⚡</title><style>
+body{margin:0;font-family:Arial;background:#f5f5f5;padding-bottom:80px}
+.h{position:sticky;top:0;z-index:9;background:linear-gradient(90deg,#ff6a00,#7ed321);padding:12px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;color:white;font-size:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
+.card{background:white;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.card img{width:100%;height:120px;object-fit:cover;border-radius:8px;background:#eee}
+.price{color:#ff6a00;font-weight:900}
+.btn{width:100%;padding:8px;border:none;border-radius:20px;font-weight:700;margin-top:5px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #ddd}
+#reels{display:none;height:100vh;background:black;color:white;padding:20px}
+.settings{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:white;z-index:99;padding:20px}
+</style></head><body>
+<div class="h"><div class="logo">SHESHA PLUG ⚡</div><div><select style="border-radius:20px;padding:5px"><option>EN</option><option>ZU</option></select> <button onclick="document.getElementById('settings').style.display='block'" style="border-radius:20px;padding:6px 12px;border:none">⚙️</button> <button id="lb" onclick="login()" style="background:black;color:white;border-radius:20px;padding:6px 12px;border:none">LOGIN</button></div></div>
+<div style="padding:10px;display:flex;gap:6px"><button onclick="showAll()" style="background:#ff6a00;color:white;border:none;padding:8px 14px;border-radius:20px;font-weight:700">All</button><button onclick="showFast()" style="background:white;border:1px solid #ddd;padding:8px 14px;border-radius:20px">🔥 Fast</button><button onclick="showSlow()" style="background:white;border:1px solid #ddd;padding:8px 14px;border-radius:20px">🐢 Slow</button><button onclick="showReels()" style="background:white;border:1px solid #ddd;padding:8px 14px;border-radius:20px">🎬 Reels</button></div>
+<div class="grid" id="g"></div>
+<div id="reels"><h2>🔴 LIVE - @DripLord_DBN - 234 watching</h2><br><p>JORDAN 4 LEGIT CHECK LIVE!</p><br><button onclick="alert('Video Call Connected! 📹')" style="background:#7ed321;padding:10px 20px;border:none;border-radius:20px;font-weight:700">💬 Join + Video Call</button><br><br><div>Watched: <span id="rc">0</span>/10 = FREE PASS ⚡</div><br><button onclick="showHome()" style="background:white;color:black;padding:10px 20px;border-radius:20px">Back to Home</button></div>
+<div class="settings" id="settings"><h2>⚙️ Settings</h2><br><p>Theme:</p><button onclick="document.body.style.background='#111';document.body.style.color='white'">🌙 Dark Mode</button> <button onclick="document.body.style.background='#001a33';document.body.style.color='white'">💙 Blue Mode</button> <button onclick="document.body.style.background='#f5f5f5';document.body.style.color='black'">☀️ Light</button><br><br><p>Language: Any language</p><button>English</button> <button>isiZulu</button> <button>isiXhosa</button><br><br><div style="background:#f0f0f0;padding:12px;border-radius:12px"><div id="un">Guest</div><div>📦 Dropship: ON</div><div>🚚 Sell without holding stock: YES</div></div><br><button onclick="document.getElementById('settings').style.display='none'" style="background:black;color:white;padding:10px 20px;border-radius:20px">Close</button></div>
+<div class="nav"><div onclick="showHome()">🏠<br>Home</div><div onclick="showReels()">🎬<br>Reels</div><div onclick="alert('📦 DROPSHIP ON! You list, supplier ships direct! You keep 15% profit, no stock needed!')">📦<br>Drop</div><div onclick="alert('💬 Chat / 📞 Call / 📹 Video Call - WhatsApp style coming!')">💬<br>Chat</div><div onclick="document.getElementById('settings').style.display='block'">👤<br>Me</div></div>
+<script>
+var prods=[{n:"iPhone 15 Pro Max",p:18500,s:145,slow:false,d:true,i:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400"},{n:"Jordan 4 Retro",p:3200,s:98,slow:false,d:true,i:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"},{n:"Toyota Corolla 2021",p:185000,s:3,slow:true,d:false,i:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400"},{n:"LV Bag Original",p:12500,s:12,slow:true,d:true,i:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"},{n:"PS5 + 2 Pads",p:8500,s:67,slow:false,d:true,i:"https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400"},{n:"Samsung S24 Ultra",p:16500,s:2,slow:true,d:true,i:"https://images.unsplash.com/photo-1610945265064-0e34e03294b5?w=400"}];
+var watched=0;
+function render(list){var g=document.getElementById('g');g.innerHTML="";for(var i=0;i<list.length;i++){var x=list[i];var tag=x.s>50?"🔥 FAST "+x.s+" sold":x.s>10?"⚡ MID":"🐢 SLOW CHEAP!";var col=x.s>50?"red":x.s>10?"orange":"gray";g.innerHTML+="<div class=card><div style=font-size:9px;background:black;color:#7ed321;padding:3px 6px;border-radius:10px;display:inline-block>"+(x.d?"📦 DROPSHIP":"")+"</div><div style=float:right;background:"+col+";color:white;font-size:9px;padding:3px 6px;border-radius:10px>"+tag+"</div><img src="+x.i+" onerror=this.src='https://via.placeholder.com/400'><div style=font-weight:700;margin-top:6px>"+x.n+"</div><div class=price>R"+x.p+"</div><div style=font-size:10px>👁️ AI: You viewed phones - trending for you</div><button class=btn style=background:#111;color:white onclick=\"buy("+i+")\">🛒 Buy - Ship direct, no stock</button><button class=btn style=background:#7ed321;color:black onclick=\"alert('Chat Call Video coming!')\">💬 Chat / Call / Video</button></div>";}}
+function showAll(){document.getElementById('g').style.display='grid';document.getElementById('reels').style.display='none';render(prods);}
+function showFast(){render(prods.filter(function(a){return a.s>50}));}
+function showSlow(){render(prods.filter(function(a){return a.s<15}));}
+function showReels(){document.getElementById('g').style.display='none';document.getElementById('reels').style.display='block';watched++;document.getElementById('rc').innerHTML=watched;if(watched>=10)alert("🎉 FREE PASS! 1 hour free selling!");}
+function showHome(){document.getElementById('g').style.display='grid';document.getElementById('reels').style.display='none';}
+function buy(i){prods[i].s++;alert("✅ BOUGHT! Dropship: Supplier ships direct to customer. You profit R"+Math.round(prods[i].p*0.15)+" - You never hold product!");render(prods);}
+function login(){var u=prompt("Username to create account:");if(u){localStorage.setItem('user',u);document.getElementById('un').innerHTML=u;document.getElementById('lb').innerHTML=u;}}
+render(prods);
+</script></body></html>
